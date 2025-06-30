@@ -71,6 +71,13 @@
         "trailer": "Changelog: chore"
       },
       {
+        "value": "[Version]",
+        "label": "version",
+        "hint": "버전 변경 (버전 태그용)",
+        "emoji": "🚀",
+        "trailer": "Changelog: version"
+      },
+      {
         "value": "",
         "label": "none"
       }
