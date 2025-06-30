@@ -1,179 +1,179 @@
 {
-	"check_status": true,
-	"commit_type": {
-		"enable": true,
-		"initial_value": "[Feat]",
-		"infer_type_from_branch": true,
-		"append_emoji_to_label": false,
-		"append_emoji_to_commit": true,
-		"options": [
-			{
-				"value": "[Feat]",
-				"label": "feat",
-				"hint": "새로운 기능 추가",
-				"emoji": "✨",
-				"trailer": "Changelog: New feature"
-			},
-			{
-				"value": "[Update]",
-				"label": "update",
-				"hint": "추가 기능 수정",
-				"emoji": "⚡",
-				"trailer": "Changelog: General update"
-			},
-			{
-				"value": "[Delete]",
-				"label": "delete",
-				"hint": "파일 삭제",
-				"emoji": "🔥",
-				"trailer": "Changelog: General delete"
-			},
-			{
-				"value": "[Fix]",
-				"label": "fix",
-				"hint": "버그 수정",
-				"emoji": "🐛",
-				"trailer": "Changelog: fix"
-			},
-			{
-				"value": "[Docs]",
-				"label": "docs",
-				"hint": "문서만 변경됨",
-				"emoji": "📚",
-				"trailer": "Changelog: documentation"
-			},
-			{
-				"value": "[Refactor]",
-				"label": "refactor",
-				"hint": "기능을 추가하지 않는 코드 변경",
-				"emoji": "🔨",
-				"trailer": "Changelog: refactor"
-			},
-			{
-				"value": "[Perf]",
-				"label": "perf",
-				"hint": "성능 향상을 위한 코드 변경",
-				"emoji": "🚀",
-				"trailer": "Changelog: performance"
-			},
-			{
-				"value": "[Build]",
-				"label": "build",
-				"hint": "빌드 혹은 앱 설정 관련 변경사항 수정",
-				"emoji": "🚧",
-				"trailer": "Changelog: build"
-			},
-			{
-				"value": "[Chore]",
-				"label": "chore",
-				"hint": "page, src 파일을 변경하지 않은 기타 수정 사항",
-				"emoji": "🧹",
-				"trailer": "Changelog: chore"
-			},
-			{
-				"value": "",
-				"label": "none"
-			}
-		]
-	},
-	"commit_scope": {
-		"enable": true,
-		"custom_scope": false,
-		"initial_value": "app",
-		"options": [
-			{
-				"value": "app",
-				"label": "app"
-			},
-			{
-				"value": "tools",
-				"label": "tools"
-			},
-			{
-				"value": "i18n",
-				"label": "i18n"
-			},
-			{
-				"value": "layouts",
-				"label": "layouts"
-			},
-			{
-				"value": "config",
-				"label": "config"
-			},
-			{
-				"value": "test",
-				"label": "test"
-			}
-		]
-	},
-	"check_ticket": {
-		"enable": false,
-		"infer_ticket": false,
-		"confirm_ticket": false,
-		"add_to_title": false,
-		"append_hashtag": false,
-		"surround": "",
-		"title_position": "start"
-	},
-	"commit_title": {
-		"max_size": 70
-	},
-	"commit_body": {
-		"enable": false,
-		"required": false
-	},
-	"commit_footer": {
-		"enable": true,
-		"initial_value": [],
-		"options": [
-			"closes",
-			"trailer",
-			"breaking-change",
-			"deprecated",
-			"custom"
-		]
-	},
-	"breaking_change": {
-		"add_exclamation_to_title": true
-	},
-	"confirm_commit": true,
-	"print_commit_output": true,
-	"branch_pre_commands": [],
-	"branch_post_commands": [],
-	"worktree_pre_commands": [],
-	"worktree_post_commands": [],
-	"branch_user": {
-		"enable": true,
-		"required": false,
-		"separator": "/"
-	},
-	"branch_type": {
-		"enable": true,
-		"separator": "/"
-	},
-	"branch_version": {
-		"enable": false,
-		"required": false,
-		"separator": "/"
-	},
-	"branch_ticket": {
-		"enable": true,
-		"required": false,
-		"separator": "-"
-	},
-	"branch_description": {
-		"max_length": 70,
-		"separator": ""
-	},
-	"branch_action_default": "branch",
-	"branch_order": [
-		"user",
-		"version",
-		"type",
-		"ticket",
-		"description"
-	],
-	"enable_worktrees": true,
-	"overrides": {}
+  "check_status": true,
+  "commit_type": {
+    "enable": true,
+    "initial_value": "[Feat]",
+    "infer_type_from_branch": true,
+    "append_emoji_to_label": false,
+    "append_emoji_to_commit": true,
+    "options": [
+      {
+        "value": "[Feat]",
+        "label": "feat",
+        "hint": "새로운 기능 추가",
+        "emoji": "✨",
+        "trailer": "Changelog: New feature"
+      },
+      {
+        "value": "[Update]",
+        "label": "update",
+        "hint": "추가 기능 수정",
+        "emoji": "⚡",
+        "trailer": "Changelog: General update"
+      },
+      {
+        "value": "[Delete]",
+        "label": "delete",
+        "hint": "파일 삭제",
+        "emoji": "🔥",
+        "trailer": "Changelog: General delete"
+      },
+      {
+        "value": "[Fix]",
+        "label": "fix",
+        "hint": "버그 수정",
+        "emoji": "🐛",
+        "trailer": "Changelog: fix"
+      },
+      {
+        "value": "[Docs]",
+        "label": "docs",
+        "hint": "문서만 변경됨",
+        "emoji": "📚",
+        "trailer": "Changelog: documentation"
+      },
+      {
+        "value": "[Refactor]",
+        "label": "refactor",
+        "hint": "기능을 추가하지 않는 코드 변경",
+        "emoji": "🔨",
+        "trailer": "Changelog: refactor"
+      },
+      {
+        "value": "[Perf]",
+        "label": "perf",
+        "hint": "성능 향상을 위한 코드 변경",
+        "emoji": "🚀",
+        "trailer": "Changelog: performance"
+      },
+      {
+        "value": "[Build]",
+        "label": "build",
+        "hint": "빌드 혹은 앱 설정 관련 변경사항 수정",
+        "emoji": "🚧",
+        "trailer": "Changelog: build"
+      },
+      {
+        "value": "[Chore]",
+        "label": "chore",
+        "hint": "page, src 파일을 변경하지 않은 기타 수정 사항",
+        "emoji": "🧹",
+        "trailer": "Changelog: chore"
+      },
+      {
+        "value": "",
+        "label": "none"
+      }
+    ]
+  },
+  "commit_scope": {
+    "enable": true,
+    "custom_scope": false,
+    "initial_value": "app",
+    "options": [
+      {
+        "value": "app",
+        "label": "app"
+      },
+      {
+        "value": "tools",
+        "label": "tools"
+      },
+      {
+        "value": "i18n",
+        "label": "i18n"
+      },
+      {
+        "value": "layouts",
+        "label": "layouts"
+      },
+      {
+        "value": "config",
+        "label": "config"
+      },
+      {
+        "value": "test",
+        "label": "test"
+      }
+    ]
+  },
+  "check_ticket": {
+    "enable": false,
+    "infer_ticket": false,
+    "confirm_ticket": false,
+    "add_to_title": false,
+    "append_hashtag": false,
+    "surround": "",
+    "title_position": "start"
+  },
+  "commit_title": {
+    "max_size": 70
+  },
+  "commit_body": {
+    "enable": false,
+    "required": false
+  },
+  "commit_footer": {
+    "enable": true,
+    "initial_value": [],
+    "options": [
+      "closes",
+      "trailer",
+      "breaking-change",
+      "deprecated",
+      "custom"
+    ]
+  },
+  "breaking_change": {
+    "add_exclamation_to_title": true
+  },
+  "confirm_commit": true,
+  "print_commit_output": true,
+  "branch_pre_commands": [],
+  "branch_post_commands": [],
+  "worktree_pre_commands": [],
+  "worktree_post_commands": [],
+  "branch_user": {
+    "enable": true,
+    "required": false,
+    "separator": "/"
+  },
+  "branch_type": {
+    "enable": true,
+    "separator": "/"
+  },
+  "branch_version": {
+    "enable": false,
+    "required": false,
+    "separator": "/"
+  },
+  "branch_ticket": {
+    "enable": true,
+    "required": false,
+    "separator": "-"
+  },
+  "branch_description": {
+    "max_length": 70,
+    "separator": ""
+  },
+  "branch_action_default": "branch",
+  "branch_order": [
+    "user",
+    "version",
+    "type",
+    "ticket",
+    "description"
+  ],
+  "enable_worktrees": true,
+  "overrides": {}
 }

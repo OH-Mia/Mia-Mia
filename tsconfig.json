@@ -1,0 +1,7 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "include": [
+    ".nuxt/../**/*"
+  ],
+  "exclude": ["eslint.config.mjs", "node_modules", "dist"]
+}
