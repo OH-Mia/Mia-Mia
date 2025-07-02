@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     typeCheck: false,
   },
   modules: [
+    '@unocss/nuxt',
     '@element-plus/nuxt',
     '@nuxt/icon',
     ['@pinia/nuxt', { autoImports: ['defineStore', 'acceptHMRUpdate'] }],
@@ -16,6 +17,10 @@ export default defineNuxtConfig({
     themes: ['dark'],
     icon: 'ElIcon',
     importStyle: 'css',
+  },
+  unocss: {
+    // UnoCSS 옵션들을 여기에 추가할 수 있습니다
+    // 또는 별도의 uno.config.ts 파일을 사용할 수 있습니다
   },
   imports: {
     dirs: [
