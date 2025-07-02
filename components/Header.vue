@@ -83,4 +83,11 @@ function onpenSidebar() {
   display: flex;
   gap: 12px;
 }
+
+/* 모바일일 때 버튼 그룹 숨김 */
+@media (max-width: 768px) {
+  .header-links {
+    display: none;
+  }
+}
 </style>
