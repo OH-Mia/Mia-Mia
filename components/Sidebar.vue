@@ -33,7 +33,7 @@ function selectMenu(name: string) {
     router.push(targetRoute)
   }
 
-  // emit('closeSidebar') // 필요 시 주석 해제
+  emit('closeSidebar')
 }
 </script>
 
@@ -88,7 +88,7 @@ function selectMenu(name: string) {
           </div>
         </el-collapse-item>
 
-        <el-collapse-item name="admin">
+        <!-- <el-collapse-item name="admin">
           <template #title>
             <div class="flex-center">
               <div class="i-material-symbols:settings-rounded header-icon" />
@@ -126,7 +126,7 @@ function selectMenu(name: string) {
               <span>{{ '유튜브 관리' }}</span>
             </div>
           </div>
-        </el-collapse-item>
+        </el-collapse-item> -->
       </el-collapse>
     </nav>
     <div class="icon-button-group">
