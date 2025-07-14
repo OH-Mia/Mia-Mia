@@ -19,8 +19,7 @@ export default defineNuxtConfig({
     importStyle: 'css',
   },
   unocss: {
-    // UnoCSS 옵션들을 여기에 추가할 수 있습니다
-    // 또는 별도의 uno.config.ts 파일을 사용할 수 있습니다
+    // UnoCSS 옵션들을 여기에 추가
   },
   imports: {
     dirs: [
@@ -31,12 +30,12 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css'],
   nitro: {
-    devProxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-      },
-    },
+    // devProxy: {
+    //   '/api': {
+    //     target: 'http://localhost:3001',
+    //     changeOrigin: true,
+    //   },
+    // },
   },
   vite: {
     optimizeDeps: {
@@ -44,10 +43,10 @@ export default defineNuxtConfig({
     },
     server: {
       proxy: {
-        '/api': {
-          target: 'http://localhost:3001',
-          changeOrigin: true,
-        },
+        // '/api': {
+        //   target: 'http://localhost:3001',
+        //   changeOrigin: true,
+        // },
       },
     },
   },
@@ -74,8 +73,15 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
+    youtubeApiKey: env.YOUTUBE_API_KEY,
     public: {
       youtubeUrl: env.VUE_APP_YOUTUBE,
+      vlogPlaylistId: env.VUE_APP_PLAYLIST_ID_VLOG,
+      mydayLogPlaylistId: env.VUE_APP_PLAYLIST_ID_MYDAYLOG,
+      myBagPlaylistId: env.VUE_APP_PLAYLIST_ID_MYBAG,
+      firebaseProjectId: env.FIREBASE_PROJECT_ID,
+      firebaseClientEmail: env.FIREBASE_CLIENT_EMAIL,
+      firebasePrivateKey: env.FIREBASE_PRIVATE_KEY,
     },
   },
 })
