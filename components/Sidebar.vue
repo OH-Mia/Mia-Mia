@@ -1,22 +1,39 @@
 <!-- components/Sidebar.vue -->
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const emit = defineEmits(['closeSidebar'])
+const router = useRouter()
 
-// 상태
+// ref
 const activeNames = ref('blog')
 const currentMenu = ref('') // 클릭된 서브 메뉴 상태
 
-// 닫기
+// events
 function onCloseSidebar() {
   emit('closeSidebar')
 }
 
-// 메뉴 클릭
 function selectMenu(name: string) {
   currentMenu.value = name
-  // emit('closeSidebar')
+
+  // 메뉴에 따라 라우팅
+  const routeMap: Record<string, string> = {
+    'youtube-vlog': '/miatube/vlog',
+    'youtube-madelog': '/miatube/madaylog',
+    'youtube-playlist': '/miatube/playlist',
+    'admin-files': '/admin/files',
+    'admin-blog': '/admin/blog',
+    'admin-youtube': '/admin/youtube',
+  }
+
+  const targetRoute = routeMap[name]
+  if (targetRoute) {
+    router.push(targetRoute)
+  }
+
+  // emit('closeSidebar') // 필요 시 주석 해제
 }
 </script>
 
