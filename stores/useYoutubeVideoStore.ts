@@ -28,19 +28,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
     error.value = null
 
     try {
-      let url = ''
-
-      if (type === 'channel') {
-        url = `/api/youtube/search/channel?channelId=${encodeURIComponent(id)}&maxResults=10`
-      }
-      else if (type === 'playlist') {
-        url = `/api/youtube/playlist/videos?playlistId=${encodeURIComponent(id)}&maxResults=10`
-      }
-      else {
-        throw new Error('지원되지 않는 요청 유형입니다.')
-      }
-
-      const data = await $fetch<any>(url)
+      const data = await $fetch(`/api/youtube?type=${type}&id=${id}`)
 
       const items: YoutubeVideoItem[] = data.items.map((item: any) => ({
         id: item.id.videoId || item.contentDetails?.videoId || '',
@@ -49,10 +37,8 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
         thumbnail: item.snippet.thumbnails?.medium?.url || '',
         publishedAt: item.snippet.publishedAt,
       }))
-      console.log('🚀 ~ items:', items)
 
       videoCache.value[cacheKey] = items
-      console.log('🚀 ~ videoCache.value[cacheKey]:', videoCache.value[cacheKey])
     }
     catch (err: any) {
       error.value = err?.data?.error || err.message || 'YouTube API 요청 실패'
