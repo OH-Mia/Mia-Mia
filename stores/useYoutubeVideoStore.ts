@@ -50,7 +50,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
 
     // 캐시에 있으면 캐시된 데이터 반환
     // if (commentCache.value[cacheKey]) {
-    //   console.log('캐시에서 댓글 반환:', commentCache.value, cacheKey)
     //   return {
     //     comments: commentCache.value[cacheKey],
     //     nextPageToken: null, // 캐시에서는 토큰 정보 없음
@@ -61,12 +60,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
     error.value = null
 
     try {
-      console.log('API 댓글 요청:', { videoId, pageToken })
-
-      const data = await $fetch('/api/youtube', { method: 'GET', params: { videoId, pageToken },
-      })
-
-      console.log('댓글 응답:', data)
+      const data = await $fetch('/api/youtube', { method: 'GET', params: { videoId, pageToken } })
 
       if (!data.items || !Array.isArray(data.items)) {
         console.error('잘못된 응답 구조:', data)
@@ -80,8 +74,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
         text: t.snippet.topLevelComment.snippet.textDisplay,
         publishedAt: t.snippet.topLevelComment.snippet.publishedAt,
       }))
-
-      console.log('캐시 저장 완료:', commentCache.value[cacheKey])
 
       return {
         comments: commentCache.value[cacheKey],

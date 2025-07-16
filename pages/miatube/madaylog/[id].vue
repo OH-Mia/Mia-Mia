@@ -80,7 +80,6 @@ async function loadInitialComments(videoId) {
   try {
     const result = await youtubeStore.fetchComments(videoId, '')
     comments.value = result.comments
-    // console.log('🚀🚀🚀 ~ loadInitialComments ~ comments.value:', comments.value)
     nextPageToken.value = result.nextPageToken || ''
     hasMoreComments.value = !!result.nextPageToken
   }
