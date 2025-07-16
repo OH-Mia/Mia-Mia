@@ -33,13 +33,14 @@ function toggleSidebar() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .main {
   width: 100%;
+  margin-top: 70px;
   transition: transform 0.3s ease;
+  background: #764ba2;
 }
 
 /* 사이드바 애니메이션 */
@@ -67,7 +68,7 @@ function toggleSidebar() {
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .container {
-    padding: 1rem;
+    padding: 0;
   }
 }
 
