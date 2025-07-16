@@ -22,7 +22,7 @@ function selectMenu(name: string) {
   const routeMap: Record<string, string> = {
     'youtube-vlog': '/miatube/vlog',
     'youtube-madelog': '/miatube/madaylog',
-    'youtube-playlist': '/miatube/playlist',
+    'youtube-mybag': '/miatube/mybagPlaylist',
     'admin-files': '/admin/files',
     'admin-blog': '/admin/blog',
     'admin-youtube': '/admin/youtube',
@@ -78,6 +78,17 @@ function selectMenu(name: string) {
 
           <div
             class="menu-item"
+            :class="{ active: currentMenu === 'youtube-mybag' }"
+            @click="selectMenu('youtube-mybag')"
+          >
+            <div class="flex-center">
+              <div class="i-material-symbols:personal-bag-rounded menu-icon" />
+              <span>{{ '왓츠 인 마이 백' }}</span>
+            </div>
+          </div>
+
+          <!-- <div
+            class="menu-item"
             :class="{ active: currentMenu === 'youtube-playlist' }"
             @click="selectMenu('youtube-playlist')"
           >
@@ -85,7 +96,7 @@ function selectMenu(name: string) {
               <div class="i-material-symbols:queue-music-rounded menu-icon" />
               <span>{{ '플레이리스트' }}</span>
             </div>
-          </div>
+          </div> -->
         </el-collapse-item>
 
         <!-- <el-collapse-item name="admin">
