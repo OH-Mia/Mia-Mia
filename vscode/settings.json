@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.eslint": true
+  },
+  "eslint.experimental.useFlatConfig": true, // Flat config 사용 시 필수
+  "eslint.validate": ["javascript", "typescript", "vue"]
+}
