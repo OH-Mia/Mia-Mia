@@ -25,6 +25,17 @@ const nextPageToken = ref('') // 다음 페이지 토큰
 const hasMoreComments = ref(false) // 더 많은 댓글 여부
 const loadingComments = ref(false) // 댓글 로딩 상태
 
+// Dicebear 아바타 URL 생성 함수
+function generateDicebearAvatar(seed: string) {
+  return `https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b6e3f4,c0aede,d1d4f9&seed=Felix${encodeURIComponent(seed)}`
+}
+
+// 아바타 URL 생성 함수
+function getAvatarUrl(comment: any) {
+  // 프로필 이미지가 있으면 사용, 없으면 dicebear 아바타 생성
+  return comment.authorProfileImageUrl || generateDicebearAvatar(comment.author)
+}
+
 // 비디오 데이터 가져오기
 async function fetchVideoData() {
   try {
@@ -192,6 +203,77 @@ onMounted(() => {
           <p>{{ videoData.description }}</p>
         </div>
       </div>
+      <!-- 댓글 섹션 -->
+      <div class="comments-section">
+        <div class="comments-header">
+          <h2 class="comments-title">
+            댓글
+          </h2>
+          <span class="comments-count">{{ comments.length }}개</span>
+        </div>
+
+        <!-- 댓글 로딩 상태 -->
+        <div v-if="loadingComments && comments.length === 0" class="comments-loading">
+          <el-skeleton animated>
+            <template #template>
+              <div v-for="i in 3" :key="i" class="comment-skeleton">
+                <el-skeleton-item variant="circle" style="width: 40px; height: 40px;" />
+                <div class="comment-content-skeleton">
+                  <el-skeleton-item variant="text" style="width: 120px; height: 16px; margin-bottom: 8px;" />
+                  <el-skeleton-item variant="text" style="width: 100%; height: 14px;" />
+                  <el-skeleton-item variant="text" style="width: 80%; height: 14px;" />
+                </div>
+              </div>
+            </template>
+          </el-skeleton>
+        </div>
+
+        <!-- 댓글 목록 -->
+        <div v-else-if="comments.length > 0" class="comments-list">
+          <div v-for="comment in comments" :key="comment.id" class="comment-item">
+            <div class="comment-avatar">
+              <el-avatar size="40" :src="getAvatarUrl(comment)" />
+            </div>
+            <div class="comment-content">
+              <div class="comment-header">
+                <span class="comment-author">{{ comment.author }}</span>
+                <span class="comment-date">
+                  {{ new Date(comment.publishedAt).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  }) }}
+                </span>
+              </div>
+              <div class="comment-text" v-html="comment.text" />
+            </div>
+          </div>
+
+          <!-- 더보기 버튼 -->
+          <div v-if="hasMoreComments" class="load-more-container">
+            <el-button
+              v-if="!loadingComments"
+              type="primary"
+              plain
+              class="load-more-button"
+              @click="loadMoreComments"
+            >
+              댓글 더보기
+            </el-button>
+            <div v-else class="loading-more">
+              <el-icon class="is-loading">
+                <Loading />
+              </el-icon>
+              <span>댓글 불러오는 중...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 댓글 없음 -->
+        <div v-else class="no-comments">
+          <el-empty description="댓글이 없습니다." />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -303,7 +385,7 @@ onMounted(() => {
 .video-description {
   color: #555;
   line-height: 1.6;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
 }
 
 .video-description p {
@@ -342,6 +424,243 @@ onMounted(() => {
 
   .video-title {
     font-size: 1.1rem;
+  }
+}
+
+/* 댓글 섹션 스타일 */
+.comments-section {
+  background: white;
+  margin-top: 1rem;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.comments-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.comments-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.comments-count {
+  font-size: 0.9rem;
+  color: #666;
+  background: #f8f9fa;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.comments-loading {
+  padding: 1rem 0;
+}
+
+.comment-skeleton {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.comment-content-skeleton {
+  flex: 1;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.comment-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.comment-item:hover {
+  background: #fafafa;
+  margin: 0 -12px;
+  padding: 12px;
+  border-radius: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-avatar {
+  flex-shrink: 0;
+}
+
+.comment-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.comment-date {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.comment-text {
+  color: #333;
+  line-height: 1.5;
+  font-size: 0.9rem;
+  word-wrap: break-word;
+}
+
+.comment-text a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.comment-text a:hover {
+  text-decoration: underline;
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+}
+
+.load-more-button {
+  min-width: 150px;
+  height: 40px;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.load-more-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.loading-more {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.loading-more .el-icon {
+  font-size: 16px;
+}
+
+.no-comments {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+}
+
+.no-comments .el-empty {
+  --el-empty-description-color: #999;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .video-container {
+    padding: 1rem;
+  }
+
+  .video-info {
+    padding: 1.5rem;
+  }
+
+  .video-title {
+    font-size: 1.25rem;
+  }
+
+  .back-button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .comments-section {
+    padding: 1.5rem;
+  }
+
+  .comments-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .comments-title {
+    font-size: 1.1rem;
+  }
+
+  .comment-item {
+    gap: 10px;
+  }
+
+  .comment-avatar .el-avatar {
+    width: 36px !important;
+    height: 36px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .video-container {
+    padding: 0.5rem;
+  }
+
+  .video-info {
+    padding: 1rem;
+  }
+
+  .video-title {
+    font-size: 1.1rem;
+  }
+
+  .comments-section {
+    padding: 1rem;
+  }
+
+  .comments-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .comment-item {
+    gap: 8px;
+  }
+
+  .comment-avatar .el-avatar {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .comment-text {
+    font-size: 0.85rem;
   }
 }
 </style>
