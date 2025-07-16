@@ -54,6 +54,12 @@ async function getBestThumbnailUrl(originalUrl: string): Promise<{ primary: stri
   }
 }
 
+// 카드 클릭 핸들러 - 라우트 이동
+function handleCardClick(card: YoutubeVideoItem) {
+  // 비디오 페이지로 라우트 이동
+  navigateTo(`/miatube/madaylog/${card.id}`)
+}
+
 // events
 function handlePageChange(val: number) {
   currentPage.value = val
@@ -104,6 +110,7 @@ onMounted(async () => {
         :key="card.id"
         class="card-item"
         shadow="hover"
+        @click="handleCardClick(card)"
       >
         <div class="card-content">
           <el-image
@@ -122,6 +129,8 @@ onMounted(async () => {
               {{ new Date(card.publishedAt).toLocaleDateString() }}
             </p>
           </div>
+          <!-- 재생 아이콘 추가 -->
+          <div class="i-material-symbols:play-arrow-rounded play-icon" />
         </div>
       </el-card>
     </div>
@@ -160,6 +169,21 @@ onMounted(async () => {
   min-height: 200px;
   height: 350px;
   border-radius: 20px;
+  cursor: pointer;
+}
+
+.card-item:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-item:hover .play-icon {
+  width: 50px;
+  height: 50px;
+  opacity: 1;
+}
+
+.card-item:hover .thumbnail {
+  opacity: 0.8;
 }
 
 ::v-deep(.el-card) {
@@ -218,6 +242,20 @@ onMounted(async () => {
   color: rgba(255, 255, 255, 0.9);
   margin: 0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  opacity: 0;
+  transition: all 0.3s ease;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 12px;
+  backdrop-filter: blur(10px);
+  pointer-events: none;
 }
 
 .pagination-container {
