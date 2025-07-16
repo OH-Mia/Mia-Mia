@@ -19,6 +19,12 @@ const error = ref('')
 // 비디오 ID
 const videoId = route.params.id as string
 
+// 댓글 관련 상태 추가
+const comments = ref([]) // 모든 댓글 목록
+const nextPageToken = ref('') // 다음 페이지 토큰
+const hasMoreComments = ref(false) // 더 많은 댓글 여부
+const loadingComments = ref(false) // 댓글 로딩 상태
+
 // 비디오 데이터 가져오기
 async function fetchVideoData() {
   try {
@@ -35,6 +41,11 @@ async function fetchVideoData() {
       const video = videos.find(v => v.id === videoId)
       if (video) {
         videoData.value = video
+
+        // 댓글 초기화 후 첫 번째 페이지 로드
+        comments.value = []
+        nextPageToken.value = ''
+        await loadInitialComments(video.id)
       }
       else {
         error.value = '비디오를 찾을 수 없습니다.'
@@ -52,6 +63,43 @@ async function fetchVideoData() {
     loading.value = false
   }
 }
+
+// 첫 번째 댓글 페이지 로드
+async function loadInitialComments(videoId) {
+  try {
+    const result = await youtubeStore.fetchComments(videoId, '')
+    comments.value = result.comments
+    // console.log('🚀🚀🚀 ~ loadInitialComments ~ comments.value:', comments.value)
+    nextPageToken.value = result.nextPageToken || ''
+    hasMoreComments.value = !!result.nextPageToken
+  }
+  catch (err) {
+    console.error('초기 댓글 로드 실패:', err)
+  }
+}
+
+// 추가 댓글 페이지 로드
+// async function loadMoreComments() {
+//   if (!hasMoreComments.value || loadingComments.value)
+//     return
+
+//   try {
+//     loadingComments.value = true
+
+//     const result = await youtubeStore.fetchComments(videoData.value.id, nextPageToken.value)
+
+//     // 기존 댓글에 새 댓글 추가
+//     comments.value = [...comments.value, ...result.comments]
+//     nextPageToken.value = result.nextPageToken || ''
+//     hasMoreComments.value = !!result.nextPageToken
+//   }
+//   catch (err) {
+//     console.error('추가 댓글 로드 실패:', err)
+//   }
+//   finally {
+//     loadingComments.value = false
+//   }
+// }
 
 // 뒤로가기
 function goBack() {
