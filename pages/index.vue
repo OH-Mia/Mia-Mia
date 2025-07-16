@@ -1,70 +1,29 @@
 <!-- pages/index.vue -->
 <script setup>
-const count = ref(0)
-
-function reset() {
-  count.value = 0
-}
+definePageMeta({
+  layout: 'default',
+  type: 'route',
+})
 </script>
 
 <template>
-  <div class="container">
-    <header class="header">
-      <h1>My Minimal Project</h1>
-      <p>간단하게 시작하는 Nuxt 3 프로젝트</p>
-    </header>
-    <main class="main">
-      <div class="card">
-        <h2>안녕하세요!</h2>
-        <p>이 프로젝트는 완전 미니멀하게 시작되었습니다.</p>
-        <p>필요한 기능들을 하나씩 추가해나가세요.</p>
-        <div class="buttons">
-          <button class="btn" @click="count++">
-            클릭: {{ count }}
-          </button>
-          <button class="btn btn-secondary" @click="reset">
-            리셋
-          </button>
-        </div>
-      </div>
-    </main>
-  </div>
+  <el-card>
+    <h2>안녕하세요!</h2>
+    <p>이 프로젝트는 완전 미니멀하게 시작되었습니다.</p>
+    <p>필요한 기능들을 하나씩 추가해나가세요.</p>
+
+    <div class="buttons">
+      <button class="btn">
+        유튜브
+      </button>
+      <button class="btn btn-secondary">
+        블로그
+      </button>
+    </div>
+  </el-card>
 </template>
 
 <style scoped>
-.container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.header {
-  text-align: center;
-  color: white;
-  margin-bottom: 2rem;
-}
-
-.header h1 {
-  font-size: 3rem;
-  margin: 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.header p {
-  font-size: 1.2rem;
-  opacity: 0.9;
-  margin: 0.5rem 0 0 0;
-}
-
-.main {
-  width: 100%;
-  max-width: 500px;
-}
-
 .card {
   background: white;
   border-radius: 12px;

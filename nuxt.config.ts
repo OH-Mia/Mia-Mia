@@ -76,9 +76,9 @@ export default defineNuxtConfig({
     youtubeApiKey: env.YOUTUBE_API_KEY,
     public: {
       youtubeUrl: env.VUE_APP_YOUTUBE,
-      vlogPlaylistId: env.VUE_APP_PLAYLIST_ID_VLOG,
-      mydayLogPlaylistId: env.VUE_APP_PLAYLIST_ID_MYDAYLOG,
-      myBagPlaylistId: env.VUE_APP_PLAYLIST_ID_MYBAG,
+      vlogPlaylistId: env.VUE_APP_PLAYLIST_ID_VLOG, // 브이로그
+      mydayLogPlaylistId: env.VUE_APP_PLAYLIST_ID_MYDAYLOG, // 마이데이 로그
+      myBagPlaylistId: env.VUE_APP_PLAYLIST_ID_MYBAG, // 왓츠인마이백
       firebaseProjectId: env.FIREBASE_PROJECT_ID,
       firebaseClientEmail: env.FIREBASE_CLIENT_EMAIL,
       firebasePrivateKey: env.FIREBASE_PRIVATE_KEY,
