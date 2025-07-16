@@ -67,10 +67,10 @@ function handlePageChange(val: number) {
 
 // onMounted
 onMounted(async () => {
-  const mydayLogPlaylistId = config.public.mydayLogPlaylistId
-  await youtubeStore.fetchVideos('playlist', mydayLogPlaylistId)
+  const vlogPlaylistId = config.public.vlogPlaylistId
+  await youtubeStore.fetchVideos('playlist', vlogPlaylistId)
 
-  const key = `playlist:${mydayLogPlaylistId}`
+  const key = `playlist:${vlogPlaylistId}`
   const videos = youtubeStore.videoCache[key]
 
   if (Array.isArray(videos)) {
@@ -166,18 +166,6 @@ onMounted(async () => {
 @media (max-width: 480px) {
   .card-grid {
     grid-template-columns: repeat(1, 1fr);
-  }
-
-  .title {
-    font-size: 0.85rem;
-  }
-
-  .date {
-    font-size: 0.75rem;
-  }
-
-  .info-overlay {
-    padding: 16px 12px 12px;
   }
 }
 </style>

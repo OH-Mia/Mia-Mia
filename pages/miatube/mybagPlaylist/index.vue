@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRuntimeConfig } from 'nuxt/app'
 import { computed, ref } from 'vue'
+import VideoCard from '~/components/VideoCard.vue' // 컴포넌트 import
 
 definePageMeta({
   layout: 'default',
@@ -67,10 +68,10 @@ function handlePageChange(val: number) {
 
 // onMounted
 onMounted(async () => {
-  const mydayLogPlaylistId = config.public.mydayLogPlaylistId
-  await youtubeStore.fetchVideos('playlist', mydayLogPlaylistId)
+  const myBagPlaylistId = config.public.myBagPlaylistId
+  await youtubeStore.fetchVideos('playlist', myBagPlaylistId)
 
-  const key = `playlist:${mydayLogPlaylistId}`
+  const key = `playlist:${myBagPlaylistId}`
   const videos = youtubeStore.videoCache[key]
 
   if (Array.isArray(videos)) {
@@ -166,18 +167,6 @@ onMounted(async () => {
 @media (max-width: 480px) {
   .card-grid {
     grid-template-columns: repeat(1, 1fr);
-  }
-
-  .title {
-    font-size: 0.85rem;
-  }
-
-  .date {
-    font-size: 0.75rem;
-  }
-
-  .info-overlay {
-    padding: 16px 12px 12px;
   }
 }
 </style>
