@@ -14,9 +14,8 @@ function onpenSidebar() {
     </button>
 
     <div class="header-title">
-      🐰
+      <img src="/kkamgo.png" alt="로고" class="header-logo">
     </div>
-
     <div class="header-links">
       <button class="icon-button" aria-label="모드 전환">
         <!-- <div class="i-material-symbols:light-mode-rounded icon" /> -->
@@ -64,12 +63,19 @@ function onpenSidebar() {
 }
 
 .header-title {
+  display: flex;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   font-size: 1.5rem;
   text-align: center;
   pointer-events: none;
+}
+
+.header-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
 }
 
 .icon-button {
