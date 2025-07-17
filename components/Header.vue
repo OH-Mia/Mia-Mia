@@ -33,7 +33,7 @@ function onpenSidebar() {
 </template>
 
 <style scoped>
-.header-container {
+/* .header-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -45,7 +45,22 @@ function onpenSidebar() {
   padding: 0 16px;
   z-index: 100;
   background: #f0e1ff;
+} */
+
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  padding: 0 16px;
+  background: #f0e1ff;
   /* background: #e1c2ff; */
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .header-title {
