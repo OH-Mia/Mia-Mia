@@ -2,6 +2,7 @@
 import { env } from 'node:process'
 
 export default defineNuxtConfig({
+  ssr: false,
   devtools: { enabled: true },
   compatibilityDate: '2025-06-30',
   typescript: {
@@ -30,12 +31,9 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css'],
   nitro: {
-    // devProxy: {
-    //   '/api': {
-    //     target: 'http://localhost:3001',
-    //     changeOrigin: true,
-    //   },
-    // },
+    prerender: {
+      routes: ['/'], // 사전 렌더링할 경로
+    },
   },
   vite: {
     optimizeDeps: {
@@ -51,6 +49,8 @@ export default defineNuxtConfig({
     },
   },
   app: {
+    baseURL: '/Mia-Mia/',
+    buildAssetsDir: 'assets/',
     head: {
       title: 'Mia Mia',
       viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover',
