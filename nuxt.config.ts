@@ -60,6 +60,14 @@ export default defineNuxtConfig({
       },
       link: [
         {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap',
+        },
+        {
           rel: 'icon',
           type: 'image/png',
           href: '/kkamgo.png',
