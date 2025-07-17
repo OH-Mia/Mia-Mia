@@ -5,6 +5,10 @@ const emit = defineEmits(['openSidebar'])
 function onpenSidebar() {
   emit('openSidebar')
 }
+
+function goToMain() {
+  navigateTo('/')
+}
 </script>
 
 <template>
@@ -13,7 +17,7 @@ function onpenSidebar() {
       <img src="/icons/sidebar-open.png" alt="사이드바 열기">
     </button>
 
-    <div class="header-title">
+    <div class="header-title" @click="goToMain">
       <img src="/kkamgo.png" alt="로고" class="header-logo">
     </div>
     <div class="header-links">
@@ -32,20 +36,6 @@ function onpenSidebar() {
 </template>
 
 <style scoped>
-/* .header-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  z-index: 100;
-  background: #f0e1ff;
-} */
-
 .header-container {
   position: fixed;
   top: 0;
@@ -69,7 +59,7 @@ function onpenSidebar() {
   transform: translateX(-50%);
   font-size: 1.5rem;
   text-align: center;
-  pointer-events: none;
+  cursor: pointer;
 }
 
 .header-logo {
