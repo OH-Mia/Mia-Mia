@@ -44,6 +44,8 @@ function onpenSidebar() {
   justify-content: space-between;
   padding: 0 16px;
   z-index: 100;
+  background: #f0e1ff;
+  /* background: #e1c2ff; */
 }
 
 .header-title {
