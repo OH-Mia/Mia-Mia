@@ -1,6 +1,15 @@
 <!-- components/Header.vue -->
 <script setup lang="ts">
 const emit = defineEmits(['openSidebar'])
+const route = useRoute()
+
+// 투명 배경을 적용할 페이지들
+const transparentPages = ['/'] // 원하는 페이지 경로들
+
+// 현재 페이지가 투명 배경을 사용할지 확인
+const isTransparentPage = computed(() => {
+  return transparentPages.includes(route.path)
+})
 
 function onpenSidebar() {
   emit('openSidebar')
@@ -12,7 +21,7 @@ function goToMain() {
 </script>
 
 <template>
-  <header class="header-container">
+  <header class="header-container" :class="{ transparent: isTransparentPage }">
     <button class="icon-button" aria-label="사이드바 열기" @click="onpenSidebar">
       <img src="/icons/sidebar-open.png" alt="사이드바 열기">
     </button>
@@ -22,7 +31,6 @@ function goToMain() {
     </div>
     <div class="header-links">
       <button class="icon-button" aria-label="모드 전환">
-        <!-- <div class="i-material-symbols:light-mode-rounded icon" /> -->
         <div class="i-material-symbols:dark-mode-rounded icon" />
       </button>
       <button class="icon-button" aria-label="네이버 블로그">
@@ -48,8 +56,13 @@ function goToMain() {
   height: 70px;
   padding: 0 16px;
   background: #f0e1ff;
-  /* background: #e1c2ff; */
   transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* 투명 배경 클래스 */
+.header-container.transparent {
+  background: transparent;
+  /* 또는 반투명: background: rgba(240, 225, 255, 0.5); */
 }
 
 .header-title {
@@ -97,7 +110,6 @@ function goToMain() {
   gap: 12px;
 }
 
-/* 모바일일 때 버튼 그룹 숨김 */
 @media (max-width: 768px) {
   .header-links {
     display: none;
