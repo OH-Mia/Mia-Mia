@@ -270,7 +270,7 @@ onMounted(() => {
 
         <!-- 댓글 없음 -->
         <div v-else class="no-comments">
-          <el-empty description="댓글이 없습니다." />
+          <el-empty description="댓글은 사랑입니다🫶" />
         </div>
       </div>
     </div>
