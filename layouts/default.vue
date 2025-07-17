@@ -5,6 +5,17 @@ const isHeaderVisible = ref(true)
 const lastScrollTop = ref(0)
 const scrollDirection = ref('down')
 
+// 현재 라우트 정보 가져오기
+const route = useRoute()
+
+// 패딩 탑이 필요없는 페이지들 정의
+const noTopPaddingPages = ['/'] // 원하는 페이지 경로들 추가
+
+// 현재 페이지가 패딩 탑이 필요없는 페이지인지 확인
+const shouldHaveTopPadding = computed(() => {
+  return !noTopPaddingPages.includes(route.path)
+})
+
 function toggleSidebar() {
   isSidebarOpen.value = !isSidebarOpen.value
 }
@@ -71,7 +82,13 @@ onUnmounted(() => {
       />
     </Transition>
 
-    <main class="main" :class="{ 'main-expanded': !isHeaderVisible }">
+    <main
+      class="main"
+      :class="{
+        'main-expanded': !isHeaderVisible,
+        'main-no-padding': !shouldHaveTopPadding,
+      }"
+    >
       <slot />
     </main>
   </div>
@@ -104,27 +121,21 @@ onUnmounted(() => {
 .main {
   width: 100%;
   margin-top: 70px;
-  transition: transform 0.3s ease, margin-top 0.3s ease;
 }
 
-/* 헤더 숨김/보임 애니메이션 */
-::v-deep(.header) {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  transition: transform 0.3s ease;
-  transform: translateY(0);
-}
-
-::v-deep(.header-hidden) {
-  transform: translateY(-100%);
+/* 패딩 탑이 없는 페이지 */
+.main-no-padding {
+  margin-top: 0;
 }
 
 /* 메인 컨텐츠 확장 */
 .main-expanded {
   margin-top: 70px;
+}
+
+/* 패딩 탑이 없는 페이지에서는 확장 시에도 margin-top 0 유지 */
+.main-no-padding.main-expanded {
+  margin-top: 0;
 }
 
 /* 사이드바 애니메이션 */
@@ -159,8 +170,16 @@ onUnmounted(() => {
     margin-top: 70px;
   }
 
+  .main-no-padding {
+    margin-top: 0;
+  }
+
   .main-expanded {
     margin-top: 70px;
+  }
+
+  .main-no-padding.main-expanded {
+    margin-top: 0;
   }
 
   /* 모바일에서 헤더 애니메이션 향상 */
