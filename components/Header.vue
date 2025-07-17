@@ -55,7 +55,7 @@ function goToMain() {
   justify-content: space-between;
   height: 70px;
   padding: 0 16px;
-  background: #f0e1ff;
+  background: rgba(240, 225, 255, 0.5);
   transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
