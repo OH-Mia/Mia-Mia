@@ -165,10 +165,8 @@ onMounted(() => {
           class="back-button"
           @click="goBack"
         >
-          <el-icon class="back-icon">
-            <ArrowLeft />
-          </el-icon>
-          목록으로
+          <div class="i-material-symbols:keyboard-double-arrow-left-rounded back-icon" />
+          <span>{{ '목록으로' }}</span>
         </el-button>
       </div>
 
@@ -281,6 +279,7 @@ onMounted(() => {
 .video-page {
   min-height: 100vh;
   background: #f8f9fa;
+  overflow-x: hidden; /* 가로스크롤 방지 */
 }
 
 .loading-container {
@@ -314,7 +313,7 @@ onMounted(() => {
 }
 
 .video-nav {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .back-button {
@@ -644,7 +643,7 @@ onMounted(() => {
   }
 
   .comments-header {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     gap: 8px;
   }
