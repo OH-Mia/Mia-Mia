@@ -32,6 +32,12 @@ jobs:
 
       - name: Build
         run: npm run generate
+        env:
+          VUE_APP_YOUTUBE: ${{ secrets.VUE_APP_YOUTUBE }}
+          VUE_APP_PLAYLIST_ID_VLOG: ${{ secrets.VUE_APP_PLAYLIST_ID_VLOG }}
+          VUE_APP_PLAYLIST_ID_MYDAYLOG: ${{ secrets.VUE_APP_PLAYLIST_ID_MYDAYLOG }}
+          VUE_APP_PLAYLIST_ID_MYBAG: ${{ secrets.VUE_APP_PLAYLIST_ID_MYBAG }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
