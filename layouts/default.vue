@@ -25,6 +25,18 @@ function toggleSidebar() {
 </template>
 
 <style scoped>
+::v-deep(.el-card) {
+  border: none !important;
+}
+
+::v-deep(.el-card__body) {
+  padding: 0 !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: none !important;
+}
+
 .container {
   position: relative;
   min-height: 100vh;
@@ -32,15 +44,15 @@ function toggleSidebar() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  justify-content: flex-end;
 }
 
 .main {
   width: 100%;
   margin-top: 70px;
   transition: transform 0.3s ease;
-  background: #764ba2;
+  /* height: calc(100vh - 70px); */
+  /* background: #764ba2; */
 }
 
 /* 사이드바 애니메이션 */
