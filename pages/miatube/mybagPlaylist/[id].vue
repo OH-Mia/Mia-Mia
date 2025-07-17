@@ -165,10 +165,8 @@ onMounted(() => {
           class="back-button"
           @click="goBack"
         >
-          <el-icon class="back-icon">
-            <ArrowLeft />
-          </el-icon>
-          목록으로
+          <div class="i-material-symbols:keyboard-double-arrow-left-rounded back-icon" />
+          <span>{{ '왓츠인마이백 보쟈' }}</span>
         </el-button>
       </div>
 

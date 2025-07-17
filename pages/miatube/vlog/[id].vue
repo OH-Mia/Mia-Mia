@@ -215,7 +215,7 @@ onMounted(() => {
           @click="goBack"
         >
           <div class="i-material-symbols:keyboard-double-arrow-left-rounded back-icon" />
-          <span>{{ '목록으로' }}</span>
+          <span>{{ '브이로그 보쟈' }}</span>
         </el-button>
       </div>
 
