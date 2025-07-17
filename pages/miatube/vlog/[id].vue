@@ -25,15 +25,64 @@ const nextPageToken = ref('') // 다음 페이지 토큰
 const hasMoreComments = ref(false) // 더 많은 댓글 여부
 const loadingComments = ref(false) // 댓글 로딩 상태
 
+// 하트 애니메이션 관련 상태
+const isLiked = ref(false)
+const animatingHearts = ref([])
+
 // Dicebear 아바타 URL 생성 함수
 function generateDicebearAvatar(seed: string) {
-  return `https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b6e3f4,c0aede,d1d4f9&seed=Felix${encodeURIComponent(seed)}`
+  return `https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b6e3f4,c0aede,d1d4f9&shapeColor=f1f4dc&eyesColor=000000&seed=Felix${encodeURIComponent(seed)}`
 }
 
 // 아바타 URL 생성 함수
 function getAvatarUrl(comment: any) {
   // 프로필 이미지가 있으면 사용, 없으면 dicebear 아바타 생성
   return comment.authorProfileImageUrl || generateDicebearAvatar(comment.author)
+}
+
+// 하트 클릭 핸들러
+function handleHeartClick() {
+  isLiked.value = !isLiked.value
+
+  if (isLiked.value) {
+    // 하트 애니메이션 생성
+    createHeartAnimation()
+  }
+}
+
+// 하트 애니메이션 생성
+function createHeartAnimation() {
+  const heartId = Date.now()
+
+  // 랜덤 시작 위치 (하트 버튼 주변)
+  const startX = Math.random() * 40 - 20 // -20px ~ 20px
+  const startY = 0
+
+  // 애니메이션 하트 추가
+  animatingHearts.value.push({
+    id: heartId,
+    x: startX,
+    y: startY,
+    opacity: 1,
+    scale: 1,
+    rotation: Math.random() * 360,
+  })
+
+  // 애니메이션 실행
+  setTimeout(() => {
+    const heart = animatingHearts.value.find(h => h.id === heartId)
+    if (heart) {
+      heart.y = -100 // 위로 이동
+      heart.opacity = 0
+      heart.scale = 0.5
+      heart.rotation += 180
+    }
+  }, 50)
+
+  // 애니메이션 완료 후 제거
+  setTimeout(() => {
+    animatingHearts.value = animatingHearts.value.filter(h => h.id !== heartId)
+  }, 1500)
 }
 
 // 비디오 데이터 가져오기
@@ -203,10 +252,36 @@ onMounted(() => {
       <!-- 댓글 섹션 -->
       <div class="comments-section">
         <div class="comments-header">
-          <h2 class="comments-title">
-            댓글
-          </h2>
-          <span class="comments-count">{{ comments.length }}개</span>
+          <div class="comments-info">
+            <h2 class="comments-title">
+              댓글
+            </h2>
+            <span class="comments-count">{{ comments.length }}개</span>
+          </div>
+
+          <!-- 하트 버튼 -->
+          <div class="heart-button-container">
+            <button
+              class="heart-button"
+              :class="{ liked: isLiked }"
+              @click="handleHeartClick"
+            >
+              <div class="i-mdi-heart heart-icon" />
+            </button>
+
+            <!-- 애니메이션 하트들 -->
+            <div
+              v-for="heart in animatingHearts"
+              :key="heart.id"
+              class="floating-heart"
+              :style="{
+                transform: `translate(${heart.x}px, ${heart.y}px) scale(${heart.scale}) rotate(${heart.rotation}deg)`,
+                opacity: heart.opacity,
+              }"
+            >
+              <div class="i-mdi-heart" />
+            </div>
+          </div>
         </div>
 
         <!-- 댓글 로딩 상태 -->
@@ -437,10 +512,16 @@ onMounted(() => {
 .comments-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #e9ecef;
+}
+
+.comments-info {
+  display: flex;
+  align-items: center;
 }
 
 .comments-title {
@@ -455,6 +536,7 @@ onMounted(() => {
   color: #666;
   background: #f8f9fa;
   padding: 4px 8px;
+  margin: 0 8px;
   border-radius: 12px;
 }
 
@@ -540,6 +622,83 @@ onMounted(() => {
 
 .comment-text a:hover {
   text-decoration: underline;
+}
+
+/* 하트 버튼 스타일 */
+.heart-button-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heart-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.heart-button:hover {
+  background: #fee2e2;
+  transform: scale(1.1);
+}
+
+.heart-button.liked {
+  background: #fecaca;
+  animation: heartPulse 0.6s ease-in-out;
+}
+
+.heart-icon {
+  font-size: 24px;
+  color: #9ca3af;
+  transition: all 0.3s ease;
+}
+
+.heart-button:hover .heart-icon {
+  color: #f87171;
+}
+
+.heart-button.liked .heart-icon {
+  color: #ef4444;
+  transform: scale(1.2);
+}
+
+/* 떠오르는 하트 애니메이션 */
+.floating-heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.floating-heart .i-mdi-heart {
+  font-size: 20px;
+  color: #ef4444;
+  filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.5));
+}
+
+/* 하트 펄스 애니메이션 */
+@keyframes heartPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .load-more-container {
@@ -644,7 +803,6 @@ onMounted(() => {
 
   .comments-header {
     flex-direction: row;
-    align-items: flex-start;
     gap: 8px;
   }
 
