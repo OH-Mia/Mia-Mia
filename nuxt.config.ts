@@ -53,12 +53,20 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'Mia Mia',
-      viewport: 'width=device-width, initial-scale=1',
+      viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover',
       charset: 'utf-8',
       htmlAttrs: {
         lang: 'ko',
       },
       link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap',
+        },
         {
           rel: 'icon',
           type: 'image/png',

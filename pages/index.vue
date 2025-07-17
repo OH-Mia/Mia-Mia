@@ -7,71 +7,81 @@ definePageMeta({
 </script>
 
 <template>
-  <el-card>
-    <h2>안녕하세요!</h2>
-    <p>이 프로젝트는 완전 미니멀하게 시작되었습니다.</p>
-    <p>필요한 기능들을 하나씩 추가해나가세요.</p>
-
-    <div class="buttons">
-      <button class="btn">
-        유튜브
-      </button>
-      <button class="btn btn-secondary">
-        블로그
-      </button>
+  <div class="landing-section">
+    <div class="landing-image" />
+    <div class="landing-content">
+      <h1 class="landing-title">
+        {{ "That is What the Moon Does." }}
+      </h1>
     </div>
-  </el-card>
+  </div>
 </template>
 
 <style scoped>
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  text-align: center;
+.landing-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.card h2 {
-  color: #333;
-  margin-top: 0;
+.landing-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/landing-top.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
 }
 
-.card p {
-  color: #666;
-  line-height: 1.6;
-  margin: 1rem 0;
+.landing-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.0);
+  z-index: 2;
 }
 
-.buttons {
+.landing-content {
+  position: relative;
+  z-index: 3;
   display: flex;
-  gap: 1rem;
+  align-items: center;
   justify-content: center;
-  margin-top: 2rem;
+  width: 100%;
+  height: 100%;
 }
 
-.btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: #667eea;
+.landing-title {
+  font-size: 4rem;
+  font-weight: 400;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
   color: white;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  max-width: 90%;
 }
 
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .landing-title {
+    font-size: 2.5rem;
+  }
 }
 
-.btn-secondary {
-  background: #f1f3f4;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+@media (max-width: 480px) {
+  .landing-title {
+    font-size: 2rem;
+  }
 }
 </style>

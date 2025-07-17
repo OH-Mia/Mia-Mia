@@ -3,12 +3,14 @@
 ## history
 
 ## v0.1.0
+
 - `nuxt.config.ts`: app 하위 head 정보 업데이트
 
 **`관련 사항`**
 - `/public`: `kkamgo.png` 파일 추가
 
 ## v0.1.1
+
 - 스토어
   - 파이어베이스서치 스토어 파일 추가
   - 네이버서치 스토어 파일 추가
@@ -39,3 +41,16 @@
   - `useFirebaseSearchStore.ts`: 파이어베이스서치 스토어 파일 추가
   - `useNaverSearchStore.ts`: 네이버서치 스토어 파일 추가
   - `useYoutubeVideoStore.ts`: 유튜브비디오 스토어 파일 추가
+
+## v0.1.2
+
+- 공통
+  - 전역 모바일 확대 방지 설정 추가
+
+- 헤더 컴포넌트
+  - 모바일 환경에서 스크롤 시 헤더 자동 숨김/보임 기능 추가
+
+**`관련 사항`**
+- `nuxt.config.ts`: app 하위 head.viewport 정보 업데이트
+- `app.vue`: 파일 내 NuxtLayout 추가
+  - 전역 모바일 확대 방지 설정 추가를 위한 스타일 코드 추가

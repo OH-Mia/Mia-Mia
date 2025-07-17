@@ -165,10 +165,8 @@ onMounted(() => {
           class="back-button"
           @click="goBack"
         >
-          <el-icon class="back-icon">
-            <ArrowLeft />
-          </el-icon>
-          목록으로
+          <div class="i-material-symbols:keyboard-double-arrow-left-rounded back-icon" />
+          <span>{{ '마데로그 보쟈' }}</span>
         </el-button>
       </div>
 
@@ -270,7 +268,7 @@ onMounted(() => {
 
         <!-- 댓글 없음 -->
         <div v-else class="no-comments">
-          <el-empty description="댓글이 없습니다." />
+          <el-empty description="댓글은 사랑입니다🫶" />
         </div>
       </div>
     </div>
