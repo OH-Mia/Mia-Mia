@@ -19,6 +19,11 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* 모든 아이콘에 기본 색상 적용 */
+[class*="i-"] {
+  color: #555;
+}
+
 /* 모바일에서 확대 방지 */
 @media (max-width: 768px) {
   html, body {
