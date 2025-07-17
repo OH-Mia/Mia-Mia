@@ -55,7 +55,7 @@ function handleImageError(event: Event) {
 .card-item {
   overflow: hidden;
   min-height: 200px;
-  height: 500px;
+  height: 380px;
   border-radius: 20px;
   cursor: pointer;
 }
@@ -146,6 +146,9 @@ function handleImageError(event: Event) {
 }
 
 @media (max-width: 480px) {
+  .card-item {
+    height: 500px;
+  }
   .title {
     font-size: 0.85rem;
   }
