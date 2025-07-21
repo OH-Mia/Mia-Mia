@@ -292,6 +292,7 @@ nav {
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 100px);
     border-radius: 0;
   }
 }
