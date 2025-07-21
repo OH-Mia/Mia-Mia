@@ -18,6 +18,14 @@ function onpenSidebar() {
 function goToMain() {
   navigateTo('/')
 }
+
+function goToNaverBlog() {
+  window.open('https://blog.naver.com/mia4956', '_blank')
+}
+
+function goToYoutube() {
+  window.open('https://www.youtube.com/@miatube3164', '_blank')
+}
 </script>
 
 <template>
@@ -33,10 +41,10 @@ function goToMain() {
       <button class="icon-button" aria-label="모드 전환">
         <div class="i-material-symbols:dark-mode-rounded icon" />
       </button>
-      <button class="icon-button" aria-label="네이버 블로그">
+      <button class="icon-button" aria-label="네이버 블로그" @click="goToNaverBlog">
         <div class="i-mdi-post icon" />
       </button>
-      <button class="icon-button" aria-label="유튜브">
+      <button class="icon-button" aria-label="유튜브" @click="goToYoutube">
         <div class="i-mdi-youtube icon" />
       </button>
     </div>
