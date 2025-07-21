@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     importStyle: 'css',
   },
   unocss: {
-    // UnoCSS 옵션들을 여기에 추가
+    dark: 'class', // <html class="dark">일 때만 다크 모드
   },
   imports: {
     dirs: [

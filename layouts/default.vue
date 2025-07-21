@@ -115,7 +115,6 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  background: #fcf9ff;
 }
 
 .main {

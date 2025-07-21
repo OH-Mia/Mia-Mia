@@ -9,8 +9,16 @@ const router = useRouter()
 // ref
 const activeNames = ref('blog')
 const currentMenu = ref('') // 클릭된 서브 메뉴 상태
+const isDark = ref(false)
 
 // events
+
+function toggleDarkMode() {
+  isDark.value = !isDark.value
+  const html = document.documentElement
+  html.classList.toggle('dark', isDark.value)
+}
+
 function onCloseSidebar() {
   emit('closeSidebar')
 }
@@ -149,7 +157,7 @@ function goToYoutube() {
       </el-collapse>
     </nav>
     <div class="icon-button-group">
-      <button class="icon-button" aria-label="모드 전환">
+      <button class="icon-button" aria-label="모드 전환" @click="toggleDarkMode">
         <div class="i-material-symbols:dark-mode-rounded icon" />
       </button>
       <button class="icon-button" aria-label="네이버 블로그" @click="goToNaverBlog">
@@ -174,6 +182,7 @@ function goToYoutube() {
   z-index: 1001;
   padding: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  color: #333;
 
   display: flex;
   flex-direction: column;
@@ -195,6 +204,7 @@ function goToYoutube() {
   border: none;
   cursor: pointer;
   padding: 0;
+  color: inherit;
 }
 
 .icon,
@@ -213,8 +223,6 @@ nav {
   flex: 1;
   overflow-y: auto;
   padding: 24px 12px;
-
-  /* border: 1px solid black; */
 }
 
 .menu-item {
@@ -266,6 +274,7 @@ nav {
   justify-content: center;
   border-radius: 500px;
   transition: background-color 0.2s;
+  color: inherit;
 }
 
 .icon-button:hover {
@@ -279,5 +288,41 @@ nav {
     width: 100%;
     border-radius: 0;
   }
+}
+</style>
+
+<style>
+html.dark .sidebar {
+  background: rgb(80, 73, 83) !important;
+  color: #f9fafb !important;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .menu-item:hover {
+  background-color: rgba(105, 95, 110, 0.6) !important;
+}
+
+html.dark .menu-item.active {
+  background-color: #5d1eaf !important;
+  color: #dbeafe !important;
+}
+
+html.dark .icon-button:hover {
+  background-color: rgb(69, 55, 81) !important;
+}
+
+html.dark .close-button,
+html.dark .icon-button {
+  color: #f9fafb !important;
+}
+
+html.dark .el-collapse-item__header {
+  background-color: transparent !important;
+  color: #f9fafb !important;
+}
+
+html.dark .el-collapse-item__content {
+  background-color: transparent !important;
+  color: #f9fafb !important;
 }
 </style>

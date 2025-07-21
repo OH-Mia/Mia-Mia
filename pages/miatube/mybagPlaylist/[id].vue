@@ -278,7 +278,7 @@ onMounted(() => {
 <style scoped>
 .video-page {
   min-height: 100vh;
-  background: #f8f9fa;
+  overflow-x: hidden; /* 가로스크롤 방지 */
 }
 
 .loading-container {
