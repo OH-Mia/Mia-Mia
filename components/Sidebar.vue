@@ -60,56 +60,58 @@ onMounted(() => {
 </script>
 
 <template>
-  <aside class="sidebar">
-    <div class="close-button-container">
-      <button class="close-button" @click="onCloseSidebar">
-        <div class="i-mdi-close icon" />
-      </button>
-    </div>
-    <nav>
-      <el-collapse v-model="activeNames">
-        <el-collapse-item name="youtube">
-          <template #title>
-            <div class="flex-center">
-              <div class="i-material-symbols:smart-display-rounded header-icon" />
-              <span>{{ '유튜브' }}</span>
-            </div>
-          </template>
+  <div class="sidebar-wrapper">
+    <div class="overlay" @click="onCloseSidebar">
+      <aside class="sidebar">
+        <div class="close-button-container">
+          <button class="close-button" @click="onCloseSidebar">
+            <div class="i-mdi-close icon" />
+          </button>
+        </div>
+        <nav>
+          <el-collapse v-model="activeNames">
+            <el-collapse-item name="youtube">
+              <template #title>
+                <div class="flex-center">
+                  <div class="i-material-symbols:smart-display-rounded header-icon" />
+                  <span>{{ '유튜브' }}</span>
+                </div>
+              </template>
 
-          <div
-            class="menu-item"
-            :class="{ active: currentMenu === 'youtube-vlog' }"
-            @click="selectMenu('youtube-vlog')"
-          >
-            <div class="flex-center">
-              <div class="i-material-symbols:photo-camera-rounded menu-icon" />
-              <span>{{ '브이로그' }}</span>
-            </div>
-          </div>
+              <div
+                class="menu-item"
+                :class="{ active: currentMenu === 'youtube-vlog' }"
+                @click="selectMenu('youtube-vlog')"
+              >
+                <div class="flex-center">
+                  <div class="i-material-symbols:photo-camera-rounded menu-icon" />
+                  <span>{{ '브이로그' }}</span>
+                </div>
+              </div>
 
-          <div
-            class="menu-item"
-            :class="{ active: currentMenu === 'youtube-madelog' }"
-            @click="selectMenu('youtube-madelog')"
-          >
-            <div class="flex-center">
-              <div class="i-material-symbols:mic-rounded menu-icon" />
-              <span>{{ '마데로그' }}</span>
-            </div>
-          </div>
+              <div
+                class="menu-item"
+                :class="{ active: currentMenu === 'youtube-madelog' }"
+                @click="selectMenu('youtube-madelog')"
+              >
+                <div class="flex-center">
+                  <div class="i-material-symbols:mic-rounded menu-icon" />
+                  <span>{{ '마데로그' }}</span>
+                </div>
+              </div>
 
-          <div
-            class="menu-item"
-            :class="{ active: currentMenu === 'youtube-mybag' }"
-            @click="selectMenu('youtube-mybag')"
-          >
-            <div class="flex-center">
-              <div class="i-material-symbols:personal-bag-rounded menu-icon" />
-              <span>{{ '왓츠 인 마이 백' }}</span>
-            </div>
-          </div>
+              <div
+                class="menu-item"
+                :class="{ active: currentMenu === 'youtube-mybag' }"
+                @click="selectMenu('youtube-mybag')"
+              >
+                <div class="flex-center">
+                  <div class="i-material-symbols:personal-bag-rounded menu-icon" />
+                  <span>{{ '왓츠 인 마이 백' }}</span>
+                </div>
+              </div>
 
-          <!-- <div
+              <!-- <div
             class="menu-item"
             :class="{ active: currentMenu === 'youtube-playlist' }"
             @click="selectMenu('youtube-playlist')"
@@ -119,9 +121,9 @@ onMounted(() => {
               <span>{{ '플레이리스트' }}</span>
             </div>
           </div> -->
-        </el-collapse-item>
+            </el-collapse-item>
 
-        <!-- <el-collapse-item name="admin">
+            <!-- <el-collapse-item name="admin">
           <template #title>
             <div class="flex-center">
               <div class="i-material-symbols:settings-rounded header-icon" />
@@ -160,23 +162,50 @@ onMounted(() => {
             </div>
           </div>
         </el-collapse-item> -->
-      </el-collapse>
-    </nav>
-    <div class="icon-button-group">
-      <button class="icon-button" aria-label="모드 전환" @click="toggleDarkMode">
-        <div class="icon" :class="[isDark ? 'i-material-symbols:light-mode-rounded icon' : 'i-material-symbols:dark-mode-rounded icon']" />
-      </button>
-      <button class="icon-button" aria-label="네이버 블로그" @click="goToNaverBlog">
-        <div class="i-mdi-post icon" />
-      </button>
-      <button class="icon-button" aria-label="유튜브" @click="goToYoutube">
-        <div class="i-mdi-youtube icon" />
-      </button>
+          </el-collapse>
+        </nav>
+        <div class="icon-button-group">
+          <button class="icon-button" aria-label="모드 전환" @click="toggleDarkMode">
+            <div class="icon" :class="[isDark ? 'i-material-symbols:light-mode-rounded icon' : 'i-material-symbols:dark-mode-rounded icon']" />
+          </button>
+          <button class="icon-button" aria-label="네이버 블로그" @click="goToNaverBlog">
+            <div class="i-mdi-post icon" />
+          </button>
+          <button class="icon-button" aria-label="유튜브" @click="goToYoutube">
+            <div class="i-mdi-youtube icon" />
+          </button>
+        </div>
+      </aside>
     </div>
-  </aside>
+  </div>
 </template>
 
 <style scoped>
+.sidebar-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: white;
+  z-index: 1000;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .overlay {
+    display: block;
+  }
+}
+
+html.dark .overlay {
+  background: rgb(80, 73, 83) !important;
+}
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -292,7 +321,6 @@ nav {
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
-    padding-bottom: calc(env(safe-area-inset-bottom) + 100px);
     border-radius: 0;
   }
 }
