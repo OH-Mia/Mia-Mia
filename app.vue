@@ -170,4 +170,33 @@ html.dark .el-skeleton {
   --el-skeleton-color: rgb(69, 55, 81) !important;
   --el-skeleton-to-color: rgb(85, 75, 90) !important;
 }
+
+/* 하트 버튼 - 다크 모드 */
+html.dark .heart-button {
+  background: rgb(69, 55, 81) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+html.dark .heart-button:hover {
+  background: rgb(93, 66, 112) !important;
+}
+
+html.dark .heart-button.liked {
+  background: rgb(239, 68, 68) !important;
+}
+
+/* 하트 아이콘 색상 - 다크 모드 */
+html.dark .heart-icon {
+  color: #f87171 !important;
+}
+
+html.dark .heart-button.liked .heart-icon {
+  color: #fee2e2 !important;
+}
+
+/* 떠오르는 하트 - 다크 모드 */
+html.dark .floating-heart .i-mdi-heart {
+  color: #f87171 !important;
+  filter: drop-shadow(0 0 4px rgba(248, 113, 113, 0.6));
+}
 </style>
