@@ -69,7 +69,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" :class="{ 'no-scroll': isSidebarOpen }">
     <Header
       :class="{ 'header-hidden': !isHeaderVisible }"
       @open-sidebar="toggleSidebar"
@@ -95,6 +95,11 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.no-scroll {
+  overflow: hidden;
+  height: 100dvh;
+}
+
 ::v-deep(.el-card) {
   border: none !important;
 }

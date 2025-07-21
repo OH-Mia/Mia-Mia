@@ -182,7 +182,7 @@ onMounted(() => {
   top: 0;
   left: 0;
   width: 360px;
-  height: 100vh;
+  height: 100dvh;
   background: white;
   border-radius: 0 20px 20px 0;
   z-index: 1001;
