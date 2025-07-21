@@ -119,6 +119,11 @@ onMounted(async () => {
 
 <style scoped>
 .page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
