@@ -92,8 +92,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     youtubeApiKey: env.YOUTUBE_API_KEY,
-    youtubeApiUrl: env.NUXT_PUBLIC_YOUTUBE_API_URL, // vercel url
     public: {
+      youtubeApiUrl: env.NUXT_PUBLIC_YOUTUBE_API_URL, // vercel url
       youtubeUrl: env.VUE_APP_YOUTUBE,
       vlogPlaylistId: env.VUE_APP_PLAYLIST_ID_VLOG, // 브이로그
       mydayLogPlaylistId: env.VUE_APP_PLAYLIST_ID_MYDAYLOG, // 마이데이 로그

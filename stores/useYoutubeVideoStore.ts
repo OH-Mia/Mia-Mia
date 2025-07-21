@@ -1,7 +1,11 @@
+import { useRuntimeConfig } from '#app'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
+  const config = useRuntimeConfig()
+  const youtubeApiUrl = config.public.youtubeApiUrl
+
   const loading = ref(false)
   const error = ref<string | null>(null)
   const videoCache = ref<Record<string, YoutubeVideoItem[]>>({})
@@ -21,8 +25,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
     error.value = null
 
     try {
-      // 로컬 API 사용
-      const data = await $fetch('/api/youtube', {
+      const data = await $fetch(`${youtubeApiUrl}`, {
         params: { type, id },
       })
 
@@ -32,7 +35,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
 
       const items: YoutubeVideoItem[] = data.items.map((item: any) => {
         let videoId = ''
-
         // 플레이리스트 아이템인 경우
         if (item.contentDetails?.videoId) {
           videoId = item.contentDetails.videoId
@@ -79,8 +81,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
     error.value = null
 
     try {
-      // 로컬 API 사용 - videoId 파라미터 전달
-      const data = await $fetch('/api/youtube', {
+      const data = await $fetch(`${youtubeApiUrl}`, {
         params: {
           videoId,
           ...(pageToken && { pageToken }),
@@ -125,7 +126,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
     error.value = null
 
     try {
-      // 댓글 작성은 OAuth가 필요하므로 현재 구현에서는 제한적
       console.warn('댓글 작성은 OAuth 인증이 필요합니다')
       error.value = '댓글 작성은 현재 지원되지 않습니다 (OAuth 필요)'
     }
