@@ -31,6 +31,16 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css'],
   nitro: {
+    // 개발 모드에서 프록시 설정 - 환경변수 사용
+    devProxy: env.NUXT_PUBLIC_YOUTUBE_API_URL
+      ? {
+          '/api/youtube': {
+            target: `${env.NUXT_PUBLIC_YOUTUBE_API_URL}/api/youtube`,
+            changeOrigin: true,
+            prependPath: true,
+          },
+        }
+      : {},
     prerender: {
       routes: ['/'], // 사전 렌더링할 경로
     },
@@ -82,6 +92,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     youtubeApiKey: env.YOUTUBE_API_KEY,
+    youtubeApiUrl: env.NUXT_PUBLIC_YOUTUBE_API_URL, // vercel url
     public: {
       youtubeUrl: env.VUE_APP_YOUTUBE,
       vlogPlaylistId: env.VUE_APP_PLAYLIST_ID_VLOG, // 브이로그
