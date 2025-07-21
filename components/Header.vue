@@ -3,6 +3,9 @@
 const emit = defineEmits(['openSidebar'])
 const route = useRoute()
 
+// ref
+const isDark = ref(false)
+
 // 투명 배경을 적용할 페이지들
 const transparentPages = ['/'] // 원하는 페이지 경로들
 
@@ -10,6 +13,13 @@ const transparentPages = ['/'] // 원하는 페이지 경로들
 const isTransparentPage = computed(() => {
   return transparentPages.includes(route.path)
 })
+
+// events
+function toggleDarkMode() {
+  isDark.value = !isDark.value
+  localStorage.setItem('dark-mode', String(isDark.value))
+  document.documentElement.classList.toggle('dark', isDark.value)
+}
 
 function onpenSidebar() {
   emit('openSidebar')
@@ -26,20 +36,27 @@ function goToNaverBlog() {
 function goToYoutube() {
   window.open('https://www.youtube.com/@miatube3164', '_blank')
 }
+
+// onMounted
+onMounted(() => {
+  const saved = localStorage.getItem('dark-mode') === 'true'
+  isDark.value = saved
+  document.documentElement.classList.toggle('dark', saved)
+})
 </script>
 
 <template>
   <header class="header-container" :class="{ transparent: isTransparentPage }">
     <button class="icon-button" aria-label="사이드바 열기" @click="onpenSidebar">
-      <img src="/icons/sidebar-open.png" alt="사이드바 열기">
+      <div class="i-mdi-menu-open icon" />
     </button>
 
     <div class="header-title" @click="goToMain">
       <img src="/kkamgo.png" alt="로고" class="header-logo">
     </div>
     <div class="header-links">
-      <button class="icon-button" aria-label="모드 전환">
-        <div class="i-material-symbols:dark-mode-rounded icon" />
+      <button class="icon-button" aria-label="모드 전환" @click="toggleDarkMode">
+        <div class="icon" :class="[isDark ? 'i-material-symbols:light-mode-rounded icon' : 'i-material-symbols:dark-mode-rounded icon']" />
       </button>
       <button class="icon-button" aria-label="네이버 블로그" @click="goToNaverBlog">
         <div class="i-mdi-post icon" />

@@ -12,11 +12,10 @@ const currentMenu = ref('') // 클릭된 서브 메뉴 상태
 const isDark = ref(false)
 
 // events
-
 function toggleDarkMode() {
   isDark.value = !isDark.value
-  const html = document.documentElement
-  html.classList.toggle('dark', isDark.value)
+  localStorage.setItem('dark-mode', String(isDark.value))
+  document.documentElement.classList.toggle('dark', isDark.value)
 }
 
 function onCloseSidebar() {
@@ -51,6 +50,13 @@ function goToNaverBlog() {
 function goToYoutube() {
   window.open('https://www.youtube.com/@miatube3164', '_blank')
 }
+
+// onMounted
+onMounted(() => {
+  const saved = localStorage.getItem('dark-mode') === 'true'
+  isDark.value = saved
+  document.documentElement.classList.toggle('dark', saved)
+})
 </script>
 
 <template>
@@ -158,7 +164,7 @@ function goToYoutube() {
     </nav>
     <div class="icon-button-group">
       <button class="icon-button" aria-label="모드 전환" @click="toggleDarkMode">
-        <div class="i-material-symbols:dark-mode-rounded icon" />
+        <div class="icon" :class="[isDark ? 'i-material-symbols:light-mode-rounded icon' : 'i-material-symbols:dark-mode-rounded icon']" />
       </button>
       <button class="icon-button" aria-label="네이버 블로그" @click="goToNaverBlog">
         <div class="i-mdi-post icon" />
