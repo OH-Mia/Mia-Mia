@@ -198,6 +198,7 @@ onMounted(() => {
 @media (max-width: 768px) {
   .overlay {
     display: block;
+    height: calc(100vh + 300px);
   }
 }
 
