@@ -35,7 +35,7 @@ export default defineNuxtConfig({
     devProxy: env.NUXT_PUBLIC_YOUTUBE_API_URL
       ? {
           '/api/youtube': {
-            target: `${env.NUXT_PUBLIC_YOUTUBE_API_URL}/api/youtube`,
+            target: `${env.NUXT_PUBLIC_YOUTUBE_API_URL}`,
             changeOrigin: true,
             prependPath: true,
           },
