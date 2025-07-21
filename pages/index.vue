@@ -31,7 +31,7 @@ definePageMeta({
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/landing-top.jpg');
+  background-image: url('/main-top.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
