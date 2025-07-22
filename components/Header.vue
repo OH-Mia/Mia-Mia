@@ -120,6 +120,7 @@ onMounted(() => {
   height: 40px;
   background: none;
   border: none;
+  border-radius: 50%;
   cursor: pointer;
   padding: 0;
 }
