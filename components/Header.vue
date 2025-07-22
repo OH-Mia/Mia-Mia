@@ -47,14 +47,16 @@ onMounted(() => {
 
 <template>
   <header class="header-container" :class="{ transparent: isTransparentPage }">
-    <button class="icon-button" aria-label="사이드바 열기" @click="onpenSidebar">
+    <button class="icon-button sidebar-button desktop-sidebar" aria-label="사이드바 열기" @click="onpenSidebar">
       <div class="i-mdi-menu-open icon" />
     </button>
+    <div class="header-links mobile-links" />
 
     <div class="header-title" @click="goToMain">
       <img src="/kkamgo.png" alt="로고" class="header-logo">
     </div>
-    <div class="header-links">
+
+    <div class="header-links desktop-links">
       <button class="icon-button" aria-label="모드 전환" @click="toggleDarkMode">
         <div class="icon" :class="[isDark ? 'i-material-symbols:light-mode-rounded icon' : 'i-material-symbols:dark-mode-rounded icon']" />
       </button>
@@ -65,6 +67,10 @@ onMounted(() => {
         <div class="i-mdi-youtube icon" />
       </button>
     </div>
+
+    <button class="icon-button sidebar-button mobile-sidebar" aria-label="사이드바 열기" @click="onpenSidebar">
+      <div class="i-mdi-menu-open icon" />
+    </button>
   </header>
 </template>
 
@@ -135,9 +141,39 @@ onMounted(() => {
   gap: 12px;
 }
 
+/* 데스크톱에서는 기본 레이아웃 */
+.mobile-sidebar {
+  display: none;
+}
+
+.mobile-links {
+  display: none;
+}
+
+.desktop-sidebar {
+  display: flex;
+}
+
+.desktop-links {
+  display: flex;
+}
+
+/* 모바일에서는 레이아웃 변경 */
 @media (max-width: 768px) {
-  .header-links {
+  .desktop-sidebar {
     display: none;
+  }
+
+  .desktop-links {
+    display: none;
+  }
+
+  .mobile-sidebar {
+    display: flex;
+  }
+
+  .mobile-links {
+    display: flex;
   }
 }
 </style>
