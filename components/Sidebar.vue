@@ -198,12 +198,14 @@ onMounted(() => {
 @media (max-width: 768px) {
   .overlay {
     display: block;
-    height: calc(100vh + 300px);
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 1;
+    transition: none; /* 애니메이션 제거 */
   }
 }
 
 html.dark .overlay {
-  background: rgb(80, 73, 83) !important;
+  background: rgba(0, 0, 0, 0.7) !important;
 }
 
 .sidebar {
@@ -218,6 +220,8 @@ html.dark .overlay {
   padding: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   color: #333;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
 
   display: flex;
   flex-direction: column;
@@ -317,11 +321,51 @@ nav {
   background-color: #f2f2f2;
 }
 
-/* 모바일일 때 전체 너비로 확장 */
+/* 모바일에서 위에서 아래로 나타나도록 수정 */
 @media (max-width: 768px) {
+  .sidebar-wrapper {
+    animation: none !important;
+    transition: none !important;
+  }
+
   .sidebar {
+    top: 0;
+    left: 0;
     width: 100%;
-    border-radius: 0;
+    height: 67vh; /* 화면의 2/3 높이 */
+    max-height: 67vh;
+    border-radius: 0 0 20px 20px; /* 아래쪽만 둥글게 */
+    transform: translateY(-100%); /* 위쪽으로 숨김 */
+    transition: transform 0.3s ease;
+    animation: slideDown 0.3s ease forwards;
+  }
+
+  .overlay {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* 사이드바가 닫힐 때의 애니메이션 */
+.sidebar-wrapper.closing .sidebar {
+  animation: slideUp 0.3s ease forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
   }
 }
 </style>
@@ -359,5 +403,12 @@ html.dark .el-collapse-item__header {
 html.dark .el-collapse-item__content {
   background-color: transparent !important;
   color: #f9fafb !important;
+}
+
+/* 모바일 다크 모드에서 사이드바 그림자 조정 */
+@media (max-width: 768px) {
+  html.dark .sidebar {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+  }
 }
 </style>
