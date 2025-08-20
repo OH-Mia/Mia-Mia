@@ -70,7 +70,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
         },
         body: {
           code,
-          redirectUri: oAuthApiUrl,
+          redirectUri: REDIRECT_URI,
           clientId: CLIENT_ID, // ✅ 올바른 환경 변수 참조
         },
       })
