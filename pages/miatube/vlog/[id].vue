@@ -1039,7 +1039,9 @@ onMounted(async () => {
   }
 
   .comments-header {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    align-items:center;
     gap: 8px;
   }
 
