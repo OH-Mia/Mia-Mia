@@ -53,7 +53,7 @@ onMounted(() => {
     <div class="header-links mobile-links" />
 
     <div class="header-title" @click="goToMain">
-      <img src="/kkamgo.png" alt="로고" class="header-logo">
+      {{ 'mia mia' }}
     </div>
 
     <div class="header-links desktop-links">
@@ -101,15 +101,11 @@ onMounted(() => {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.5rem;
+  font-size: 1rem;
+  font-style: italic;
   text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-}
-
-.header-logo {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
 }
 
 .icon-button {
