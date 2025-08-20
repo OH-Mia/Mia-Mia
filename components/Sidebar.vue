@@ -95,7 +95,7 @@ onMounted(() => {
               @click="selectMenu('youtube-madelog')"
             >
               <div class="flex-center">
-                <div class="i-material-symbols:mic-rounded menu-icon" />
+                <div class="i-material-symbols:nest-eco-leaf-rounded menu-icon" />
                 <span>{{ '마데로그' }}</span>
               </div>
             </div>
