@@ -29,6 +29,11 @@ const loadingComments = ref(false) // 댓글 로딩 상태
 const isLiked = ref(false)
 const animatingHearts = ref([])
 
+// OAuth 관련 상태
+const showLoginModal = ref(false)
+const commentText = ref('')
+const submittingComment = ref(false)
+
 // Dicebear 아바타 URL 생성 함수
 function generateDicebearAvatar(seed: string) {
   return `https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b6e3f4,c0aede,d1d4f9&shapeColor=f1f4dc&eyesColor=000000&seed=Felix${encodeURIComponent(seed)}`
@@ -36,17 +41,93 @@ function generateDicebearAvatar(seed: string) {
 
 // 아바타 URL 생성 함수
 function getAvatarUrl(comment: any) {
-  // 프로필 이미지가 있으면 사용, 없으면 dicebear 아바타 생성
   return comment.authorProfileImageUrl || generateDicebearAvatar(comment.author)
 }
 
-// 하트 클릭 핸들러
-function handleHeartClick() {
-  isLiked.value = !isLiked.value
+// 하트 클릭 핸들러 (ElMessage 제거)
+async function handleHeartClick() {
+  // 로그인되지 않은 경우 로그인 모달 표시
+  if (!youtubeStore.isAuthenticated) {
+    showLoginModal.value = true
+    return
+  }
 
-  if (isLiked.value) {
-    // 하트 애니메이션 생성
-    createHeartAnimation()
+  try {
+    const newState = !isLiked.value
+
+    // YouTube API 호출
+    await youtubeStore.likeVideo(videoId, newState ? 'like' : 'none')
+
+    // 성공시 상태 업데이트
+    isLiked.value = newState
+
+    if (newState) {
+      createHeartAnimation()
+    }
+  }
+  catch (err) {
+    console.error('좋아요 실패:', err)
+  }
+}
+
+// 간편 로그인 핸들러 (스토어 메소드 호출)
+function handleEasyLogin() {
+  showLoginModal.value = false
+
+  try {
+    // 현재 위치를 sessionStorage에 저장
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('oauth_return_url', window.location.pathname)
+    }
+
+    // 스토어의 OAuth 메소드 호출
+    youtubeStore.initiateOAuth()
+  }
+  catch (error) {
+    console.error('OAuth 시작 에러:', error)
+  }
+}
+
+// 댓글 작성 핸들러 (ElMessage 제거)
+async function submitComment() {
+  if (!youtubeStore.isAuthenticated) {
+    return
+  }
+
+  if (!commentText.value.trim()) {
+    return
+  }
+
+  try {
+    submittingComment.value = true
+
+    // YouTube API로 댓글 작성
+    await youtubeStore.postComment(videoId, commentText.value.trim())
+
+    // 성공시 입력창 초기화
+    commentText.value = ''
+
+    // 댓글 목록 새로고침
+    await refreshComments()
+  }
+  catch (err) {
+    console.error('댓글 작성 실패:', err)
+  }
+  finally {
+    submittingComment.value = false
+  }
+}
+
+// 댓글 목록 새로고침
+async function refreshComments() {
+  try {
+    const result = await youtubeStore.fetchComments(videoId, '')
+    comments.value = result.comments
+    nextPageToken.value = result.nextPageToken || ''
+    hasMoreComments.value = !!result.nextPageToken
+  }
+  catch (err) {
+    console.error('댓글 새로고침 실패:', err)
   }
 }
 
@@ -138,27 +219,27 @@ async function loadInitialComments(videoId) {
 }
 
 // 추가 댓글 페이지 로드
-// async function loadMoreComments() {
-//   if (!hasMoreComments.value || loadingComments.value)
-//     return
+async function loadMoreComments() {
+  if (!hasMoreComments.value || loadingComments.value)
+    return
 
-//   try {
-//     loadingComments.value = true
+  try {
+    loadingComments.value = true
 
-//     const result = await youtubeStore.fetchComments(videoData.value.id, nextPageToken.value)
+    const result = await youtubeStore.fetchComments(videoData.value.id, nextPageToken.value)
 
-//     // 기존 댓글에 새 댓글 추가
-//     comments.value = [...comments.value, ...result.comments]
-//     nextPageToken.value = result.nextPageToken || ''
-//     hasMoreComments.value = !!result.nextPageToken
-//   }
-//   catch (err) {
-//     console.error('추가 댓글 로드 실패:', err)
-//   }
-//   finally {
-//     loadingComments.value = false
-//   }
-// }
+    // 기존 댓글에 새 댓글 추가
+    comments.value = [...comments.value, ...result.comments]
+    nextPageToken.value = result.nextPageToken || ''
+    hasMoreComments.value = !!result.nextPageToken
+  }
+  catch (err) {
+    console.error('추가 댓글 로드 실패:', err)
+  }
+  finally {
+    loadingComments.value = false
+  }
+}
 
 // 뒤로가기
 function goBack() {
@@ -172,7 +253,33 @@ const embedUrl = computed(() => {
   return `https://www.youtube.com/embed/${videoData.value.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0`
 })
 
-onMounted(() => {
+// OAuth 콜백 처리 (루트에서 처리)
+onMounted(async () => {
+  if (process.client) {
+    const urlParams = new URLSearchParams(window.location.search)
+    const authCode = urlParams.get('code')
+    const state = urlParams.get('state')
+
+    if (authCode) {
+      console.log('OAuth 콜백 처리 중...', authCode)
+
+      const success = await youtubeStore.handleOAuthCallback(authCode)
+      if (success) {
+        console.log('로그인 성공!')
+
+        // URL 파라미터 제거
+        window.history.replaceState({}, document.title, window.location.pathname)
+
+        // 원래 위치로 이동 (state 또는 sessionStorage 사용)
+        const returnUrl = state ? decodeURIComponent(state) : sessionStorage.getItem('oauth_return_url')
+        if (returnUrl && returnUrl !== window.location.pathname) {
+          await navigateTo(returnUrl)
+          return
+        }
+      }
+    }
+  }
+
   fetchVideoData()
 })
 </script>
@@ -209,11 +316,7 @@ onMounted(() => {
     <div v-else-if="videoData" class="video-container">
       <!-- 상단 네비게이션 -->
       <div class="video-nav">
-        <el-button
-          type="text"
-          class="back-button"
-          @click="goBack"
-        >
+        <el-button type="text" class="back-button" @click="goBack">
           <div class="i-material-symbols:keyboard-double-arrow-left-rounded back-icon" />
           <span>{{ '브이로그 보쟈' }}</span>
         </el-button>
@@ -249,6 +352,7 @@ onMounted(() => {
           <p>{{ videoData.description }}</p>
         </div>
       </div>
+
       <!-- 댓글 섹션 -->
       <div class="comments-section">
         <div class="comments-header">
@@ -280,6 +384,39 @@ onMounted(() => {
               }"
             >
               <div class="i-mdi-heart" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 댓글 작성 폼 -->
+        <div v-if="youtubeStore.isAuthenticated" class="comment-form">
+          <div class="comment-input-container">
+            <el-input
+              v-model="commentText"
+              type="textarea"
+              placeholder="댓글을 입력하세요..."
+              :rows="3"
+              maxlength="500"
+              show-word-limit
+              resize="none"
+            />
+            <div class="comment-form-actions">
+              <el-button
+                size="small"
+                :disabled="!commentText.trim()"
+                @click="commentText = ''"
+              >
+                취소
+              </el-button>
+              <el-button
+                type="primary"
+                size="small"
+                :loading="submittingComment"
+                :disabled="!commentText.trim()"
+                @click="submitComment"
+              >
+                댓글 작성
+              </el-button>
             </div>
           </div>
         </div>
@@ -333,9 +470,9 @@ onMounted(() => {
               댓글 더보기
             </el-button>
             <div v-else class="loading-more">
-              <el-icon class="is-loading">
-                <Loading />
-              </el-icon>
+              <div class="loading-spinner">
+                ⏳
+              </div>
               <span>댓글 불러오는 중...</span>
             </div>
           </div>
@@ -347,13 +484,56 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- 친화적인 로그인 모달 -->
+    <el-dialog
+      v-model="showLoginModal"
+      title=""
+      width="400px"
+      :show-close="false"
+      align-center
+    >
+      <div class="login-modal-content">
+        <div class="login-icon">
+          <div class="i-mdi-heart login-heart" />
+        </div>
+        <h3 class="login-title">
+          좋아요를 누르시겠어요?
+        </h3>
+        <p class="login-description">
+          구글 계정으로 간단하게 로그인하면<br>
+          영상에 좋아요를 남길 수 있어요! 💖
+        </p>
+        <div class="login-actions">
+          <el-button
+            size="large"
+            @click="showLoginModal = false"
+          >
+            다음에 할게요
+          </el-button>
+          <el-button
+            type="primary"
+            size="large"
+            :loading="youtubeStore.loading"
+            @click="handleEasyLogin"
+          >
+            <div class="i-logos-google-icon login-google-icon" />
+            구글로 로그인
+          </el-button>
+        </div>
+        <p class="login-note">
+          * 로그인 정보는 좋아요 기능에만 사용돼요
+        </p>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <style scoped>
+/* 모든 기존 스타일 유지 */
 .video-page {
   min-height: 100vh;
-  overflow-x: hidden; /* 가로스크롤 방지 */
+  overflow-x: hidden;
 }
 
 .loading-container {
@@ -411,7 +591,7 @@ onMounted(() => {
   position: relative;
   width: 100%;
   height: 0;
-  padding-bottom: 56.25%; /* 16:9 비율 */
+  padding-bottom: 56.25%;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -465,40 +645,6 @@ onMounted(() => {
   white-space: pre-wrap;
 }
 
-/* 반응형 스타일 */
-@media (max-width: 768px) {
-  .video-container {
-    padding: 1rem;
-  }
-
-  .video-info {
-    padding: 1.5rem;
-  }
-
-  .video-title {
-    font-size: 1.25rem;
-  }
-
-  .back-button {
-    font-size: 14px;
-    padding: 6px 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .video-container {
-    padding: 0.5rem;
-  }
-
-  .video-info {
-    padding: 1rem;
-  }
-
-  .video-title {
-    font-size: 1.1rem;
-  }
-}
-
 /* 댓글 섹션 스타일 */
 .comments-section {
   background: white;
@@ -537,6 +683,27 @@ onMounted(() => {
   padding: 4px 8px;
   margin: 0 8px;
   border-radius: 12px;
+}
+
+/* 댓글 작성 폼 스타일 */
+.comment-form {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.comment-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comment-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .comments-loading {
@@ -689,15 +856,9 @@ onMounted(() => {
 
 /* 하트 펄스 애니메이션 */
 @keyframes heartPulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
 .load-more-container {
@@ -728,8 +889,14 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
-.loading-more .el-icon {
+.loading-spinner {
+  animation: spin 1s linear infinite;
   font-size: 16px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .no-comments {
@@ -740,6 +907,70 @@ onMounted(() => {
 
 .no-comments .el-empty {
   --el-empty-description-color: #999;
+}
+
+/* 친화적인 로그인 모달 스타일 */
+.login-modal-content {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.login-icon {
+  margin-bottom: 1rem;
+}
+
+.login-heart {
+  font-size: 3rem;
+  color: #ef4444;
+  animation: loginHeartBeat 1.5s ease-in-out infinite;
+}
+
+.login-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.login-description {
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  font-size: 0.95rem;
+}
+
+.login-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.login-actions .el-button {
+  width: 100%;
+  height: 44px;
+  border-radius: 22px;
+  font-weight: 500;
+}
+
+.login-google-icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.login-note {
+  font-size: 0.8rem;
+  color: #999;
+  margin: 0;
+}
+
+@keyframes loginHeartBeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 /* 반응형 스타일 */
@@ -767,6 +998,9 @@ onMounted(() => {
 
   .comments-header {
     margin-bottom: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .comments-title {
@@ -780,6 +1014,10 @@ onMounted(() => {
   .comment-avatar .el-avatar {
     width: 36px !important;
     height: 36px !important;
+  }
+
+  .comment-form {
+    padding: 1rem;
   }
 }
 
@@ -801,7 +1039,7 @@ onMounted(() => {
   }
 
   .comments-header {
-    flex-direction: row;
+    flex-direction: column;
     gap: 8px;
   }
 
@@ -816,6 +1054,10 @@ onMounted(() => {
 
   .comment-text {
     font-size: 0.85rem;
+  }
+
+  .comment-form {
+    padding: 0.75rem;
   }
 }
 </style>

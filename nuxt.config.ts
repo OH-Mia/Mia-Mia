@@ -41,6 +41,15 @@ export default defineNuxtConfig({
           },
         }
       : {},
+    devProxy: env.NUXT_PUBLIC_YOUTUBE_API_URL
+      ? {
+          '/api/oauth/token': {
+            target: `${env.NUXT_PUBLIC_OAUTH_API_URL}`,
+            changeOrigin: true,
+            prependPath: true,
+          },
+        }
+      : {},
     prerender: {
       routes: ['/'], // 사전 렌더링할 경로
     },
@@ -59,7 +68,7 @@ export default defineNuxtConfig({
     },
   },
   app: {
-    baseURL: '/Mia-Mia/',
+    baseURL: env.NODE_ENV === 'production' ? '/Mia-Mia/' : '/',
     buildAssetsDir: 'assets/',
     head: {
       title: 'Mia Mia',
@@ -100,7 +109,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     youtubeApiKey: env.YOUTUBE_API_KEY,
     public: {
+      googleClientId: env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
+      googleRedirectUri: env.NUXT_PUBLIC_GOOGLE_REDIRECT_URI,
       youtubeApiUrl: env.NUXT_PUBLIC_YOUTUBE_API_URL, // vercel url
+      oAuthApiUrl: env.NUXT_PUBLIC_OAUTH_API_URL, // vercel url
       youtubeUrl: env.VUE_APP_YOUTUBE,
       vlogPlaylistId: env.VUE_APP_PLAYLIST_ID_VLOG, // 브이로그
       mydayLogPlaylistId: env.VUE_APP_PLAYLIST_ID_MYDAYLOG, // 마이데이 로그
