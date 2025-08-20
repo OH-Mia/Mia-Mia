@@ -55,6 +55,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
    * OAuth 콜백 처리 (authorization code를 access token으로 교환)
    */
   async function handleOAuthCallback(code: string) {
+    console.log('🚀 ~ code:', code)
     const isClientSide = typeof window !== 'undefined'
 
     if (!isClientSide) {
@@ -73,6 +74,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
           clientId: CLIENT_ID, // ✅ 올바른 환경 변수 참조
         },
       })
+      console.log('🚀 ~ response:', response)
 
       if (response.access_token) {
       // 성공적으로 토큰을 받은 경우
