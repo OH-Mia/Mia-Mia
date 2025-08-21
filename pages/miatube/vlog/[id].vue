@@ -690,6 +690,12 @@ onMounted(async () => {
   border: 1px solid #e9ecef;
 }
 
+.dark .comment-form {
+  background: #403b42;
+  color: #f1f3f5;
+  border: 1px solid #555;
+}
+
 .comment-input-container {
   display: flex;
   flex-direction: column;
