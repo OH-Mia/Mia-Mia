@@ -129,7 +129,6 @@ async function submitComment() {
 
     // YouTube API로 댓글 작성
     const newComment = await youtubeStore.postComment(videoId, commentText.value.trim())
-    console.log('🚀 ~ newComment:', newComment)
 
     // 성공시 입력창 초기화
     commentText.value = ''
@@ -137,7 +136,6 @@ async function submitComment() {
     // 새 댓글을 목록 맨 앞에 추가 (즉시 반영)
     if (newComment) {
       comments.value.unshift(newComment.comment)
-      console.log('🚀 ~ comments.value:', comments.value)
     }
     else {
       // API 응답에 댓글 데이터가 없으면 전체 새로고침
