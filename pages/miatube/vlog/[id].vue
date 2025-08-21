@@ -34,6 +34,29 @@ const showLoginModal = ref(false)
 const commentText = ref('')
 const submittingComment = ref(false)
 
+// computed
+const modalWidth = computed(() => {
+  if (process.client) {
+    const screenWidth = window.innerWidth
+    if (screenWidth < 480)
+      return '90%' // 모바일
+    if (screenWidth < 768)
+      return '80%' // 작은 태블릿
+    if (screenWidth < 1024)
+      return '450px' // 태블릿
+    return '400px' // 데스크탑
+  }
+  return '400px'
+})
+
+// 유튜브 임베드 URL 생성
+const embedUrl = computed(() => {
+  if (!videoData.value)
+    return ''
+  return `https://www.youtube.com/embed/${videoData.value.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0`
+})
+
+// events
 // Dicebear 아바타 URL 생성 함수
 function generateDicebearAvatar(seed: string) {
   return `https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b6e3f4,c0aede,d1d4f9&shapeColor=f1f4dc&eyesColor=000000&seed=Felix${encodeURIComponent(seed)}`
@@ -44,7 +67,7 @@ function getAvatarUrl(comment: any) {
   return comment.authorProfileImageUrl || generateDicebearAvatar(comment.author)
 }
 
-// 하트 클릭 핸들러 (ElMessage 제거)
+// 하트 클릭 핸들러
 async function handleHeartClick() {
   // 로그인되지 않은 경우 로그인 모달 표시
   if (!youtubeStore.isAuthenticated) {
@@ -70,10 +93,13 @@ async function handleHeartClick() {
   }
 }
 
-// 간편 로그인 핸들러 (스토어 메소드 호출)
+// 간편 로그인 핸들러
 function handleEasyLogin() {
-  showLoginModal.value = false
+  if (youtubeStore.isAuthenticated) {
+    return
+  }
 
+  showLoginModal.value = false
   try {
     // 현재 위치를 sessionStorage에 저장
     if (typeof window !== 'undefined') {
@@ -88,7 +114,7 @@ function handleEasyLogin() {
   }
 }
 
-// 댓글 작성 핸들러 (ElMessage 제거)
+// 댓글 작성 핸들러
 async function submitComment() {
   if (!youtubeStore.isAuthenticated) {
     return
@@ -102,16 +128,24 @@ async function submitComment() {
     submittingComment.value = true
 
     // YouTube API로 댓글 작성
-    await youtubeStore.postComment(videoId, commentText.value.trim())
+    const newComment = await youtubeStore.postComment(videoId, commentText.value.trim())
 
     // 성공시 입력창 초기화
     commentText.value = ''
 
-    // 댓글 목록 새로고침
-    await refreshComments()
+    // 새 댓글을 목록 맨 앞에 추가 (즉시 반영)
+    if (newComment) {
+      comments.value.unshift(newComment.comment)
+    }
+    else {
+      // API 응답에 댓글 데이터가 없으면 전체 새로고침
+      await refreshComments()
+    }
   }
   catch (err) {
     console.error('댓글 작성 실패:', err)
+    // 실패시에도 새로고침 시도
+    await refreshComments()
   }
   finally {
     submittingComment.value = false
@@ -246,40 +280,10 @@ function goBack() {
   navigateTo('/miatube/vlog')
 }
 
-// 유튜브 임베드 URL 생성
-const embedUrl = computed(() => {
-  if (!videoData.value)
-    return ''
-  return `https://www.youtube.com/embed/${videoData.value.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0`
-})
-
-// OAuth 콜백 처리 (루트에서 처리)
+// onMounted
 onMounted(async () => {
-  if (process.client) {
-    const urlParams = new URLSearchParams(window.location.search)
-    const authCode = urlParams.get('code')
-    const state = urlParams.get('state')
-
-    if (authCode) {
-      console.log('OAuth 콜백 처리 중...', authCode)
-
-      const success = await youtubeStore.handleOAuthCallback(authCode)
-      if (success) {
-        console.log('로그인 성공!')
-
-        // URL 파라미터 제거
-        window.history.replaceState({}, document.title, window.location.pathname)
-
-        // 원래 위치로 이동 (state 또는 sessionStorage 사용)
-        const returnUrl = state ? decodeURIComponent(state) : sessionStorage.getItem('oauth_return_url')
-        if (returnUrl && returnUrl !== window.location.pathname) {
-          await navigateTo(returnUrl)
-          return
-        }
-      }
-    }
-  }
-
+  // 저장된 토큰으로 인증 상태 복원
+  await youtubeStore.restoreAuth()
   fetchVideoData()
 })
 </script>
@@ -402,20 +406,15 @@ onMounted(async () => {
             />
             <div class="comment-form-actions">
               <el-button
-                size="small"
-                :disabled="!commentText.trim()"
-                @click="commentText = ''"
+                size="small" :disabled="!commentText.trim()" @click="commentText = ''"
               >
-                취소
+                {{ "취소" }}
               </el-button>
               <el-button
-                type="primary"
-                size="small"
                 :loading="submittingComment"
-                :disabled="!commentText.trim()"
-                @click="submitComment"
+                type="info" size="small" :disabled="!commentText.trim()" @click="submitComment"
               >
-                댓글 작성
+                {{ "댓글 작성" }}
               </el-button>
             </div>
           </div>
@@ -485,11 +484,11 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- 친화적인 로그인 모달 -->
+    <!-- 로그인 모달 -->
     <el-dialog
       v-model="showLoginModal"
       title=""
-      width="400px"
+      :width="modalWidth"
       :show-close="false"
       align-center
     >
@@ -498,31 +497,26 @@ onMounted(async () => {
           <div class="i-mdi-heart login-heart" />
         </div>
         <h3 class="login-title">
-          좋아요를 누르시겠어요?
+          {{ "좋아요를 누르시겠어요?" }}
         </h3>
         <p class="login-description">
-          구글 계정으로 간단하게 로그인하면<br>
-          영상에 좋아요를 남길 수 있어요! 💖
+          {{ "구글 계정으로 간단하게 로그인하면" }}<br>
+          {{ "영상에 좋아요를 남길 수 있어요! 💖" }}
         </p>
         <div class="login-actions">
-          <el-button
-            size="large"
-            @click="showLoginModal = false"
-          >
-            다음에 할게요
+          <el-button size="large" @click="showLoginModal = false">
+            {{ "다음에 할게요" }}
           </el-button>
           <el-button
-            type="primary"
-            size="large"
             :loading="youtubeStore.loading"
-            @click="handleEasyLogin"
+            type="primary" size="large" @click="handleEasyLogin"
           >
-            <div class="i-logos-google-icon login-google-icon" />
-            구글로 로그인
+            <img src="/icons/google-icon.svg" alt="Google" class="login-google-icon">
+            {{ "구글로 로그인" }}
           </el-button>
         </div>
         <p class="login-note">
-          * 로그인 정보는 좋아요 기능에만 사용돼요
+          {{ "* 로그인 정보는 좋아요/댓글 작성 기능에만 사용돼요" }}
         </p>
       </div>
     </el-dialog>
@@ -694,6 +688,12 @@ onMounted(async () => {
   border: 1px solid #e9ecef;
 }
 
+.dark .comment-form {
+  background: #403b42;
+  color: #f1f3f5;
+  border: 1px solid #555;
+}
+
 .comment-input-container {
   display: flex;
   flex-direction: column;
@@ -703,7 +703,6 @@ onMounted(async () => {
 .comment-form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
 }
 
 .comments-loading {
@@ -932,6 +931,10 @@ onMounted(async () => {
   margin: 0 0 1rem 0;
 }
 
+.dark .login-title {
+  color: #fff;
+}
+
 .login-description {
   color: #666;
   line-height: 1.6;
@@ -942,6 +945,7 @@ onMounted(async () => {
 .login-actions {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 12px;
   margin-bottom: 1rem;
 }
@@ -951,11 +955,12 @@ onMounted(async () => {
   height: 44px;
   border-radius: 22px;
   font-weight: 500;
+  margin: 0;
 }
 
 .login-google-icon {
   margin-right: 8px;
-  font-size: 16px;
+  width: 18px;
 }
 
 .login-note {

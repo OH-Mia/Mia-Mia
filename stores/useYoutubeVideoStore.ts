@@ -27,7 +27,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
    */
   function initiateOAuth() {
     if (!CLIENT_ID) {
-      console.error('❌ CLIENT_ID가 없습니다!')
       error.value = 'Google Client ID가 설정되지 않았습니다'
       return
     }
@@ -40,13 +39,9 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
       authUrl.searchParams.set('scope', SCOPE)
       authUrl.searchParams.set('access_type', 'offline')
       authUrl.searchParams.set('prompt', 'consent')
-
-      console.log('✅ 생성된 OAuth URL:', authUrl.toString())
-
       window.location.href = authUrl.toString()
     }
     catch (err) {
-      console.error('🚨 OAuth URL 생성 중 에러:', err)
       error.value = `OAuth URL 생성 실패: ${err.message}`
     }
   }
@@ -56,7 +51,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
    */
   async function handleOAuthCallback(code: string) {
     try {
-      const response = await $fetch(`${oAuthApiUrl}`, {
+      const response = await $fetch(oAuthApiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,10 +59,9 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
         body: {
           code,
           redirectUri: REDIRECT_URI,
-          clientId: CLIENT_ID, // ✅ 올바른 환경 변수 참조
+          clientId: CLIENT_ID,
         },
       })
-      console.log('🚀 ~ response:', response)
 
       if (response.access_token) {
       // 성공적으로 토큰을 받은 경우
@@ -76,11 +70,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
 
         // 세션 스토리지에 저장
         sessionStorage.setItem('youtube_access_token', response.access_token)
-
-        console.log('🎉 OAuth 인증 완료!')
-        console.log('인증 상태:', isAuthenticated.value)
-        console.log('토큰:', response.access_token)
-
         return response
       }
       else {
@@ -104,11 +93,10 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
    * 저장된 토큰으로 인증 상태 복원
    */
   function restoreAuth() {
-    const token = sessionStorage.getItem('youtube_token')
+    const token = sessionStorage.getItem('youtube_access_token')
     if (token) {
       accessToken.value = token
       isAuthenticated.value = true
-      console.log('🔄 인증 상태 복원됨:', token)
     }
   }
 
@@ -118,7 +106,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
   function logout() {
     accessToken.value = null
     isAuthenticated.value = false
-    sessionStorage.removeItem('youtube_token')
+    sessionStorage.removeItem('youtube_access_token')
   }
 
   /**
@@ -135,7 +123,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
     error.value = null
 
     try {
-      const data = await $fetch(`${youtubeApiUrl}`, {
+      const data = await $fetch(youtubeApiUrl, {
         params: { type, id },
       })
 
@@ -225,11 +213,9 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
   }
 
   /**
-   * 비디오 좋아요/싫어요 (실제 YouTube API)
+   * 비디오 좋아요
    */
-  async function likeVideo(videoId: string, rating: 'like' | 'dislike' | 'none') {
-    console.log('좋아요 API 호출:', { videoId, rating, isAuthenticated: isAuthenticated.value })
-
+  async function likeVideo(videoId: string, rating: 'like') {
     if (!isAuthenticated.value || !accessToken.value) {
       throw new Error('로그인이 필요합니다')
     }
@@ -242,8 +228,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
     error.value = null
 
     try {
-      console.log('YouTube 좋아요 API 호출 중...')
-
       const result = await $fetch(youtubeApiUrl, {
         method: 'POST',
         headers: {
@@ -257,10 +241,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
         },
       })
 
-      console.log('YouTube API 응답:', result)
-
       if (result.success) {
-        console.log('✅ 좋아요 성공!')
         return result
       }
       else {
@@ -278,11 +259,9 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
   }
 
   /**
-   * 댓글 작성 (실제 YouTube API)
+   * 댓글 작성
    */
   async function postComment(videoId: string, text: string) {
-    console.log('댓글 작성 API 호출:', { videoId, text, isAuthenticated: isAuthenticated.value })
-
     if (!isAuthenticated.value || !accessToken.value) {
       throw new Error('로그인이 필요합니다')
     }
@@ -295,8 +274,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
     error.value = null
 
     try {
-      console.log('YouTube 댓글 작성 API 호출 중...')
-
       const result = await $fetch(youtubeApiUrl, {
         method: 'POST',
         headers: {
@@ -306,11 +283,9 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
         body: {
           action: 'comment',
           videoId,
-          text: text.trim(),
+          text,
         },
       })
-
-      console.log('YouTube API 응답:', result)
 
       if (result.success && result.comment) {
         // 댓글 캐시 무효화 (새 댓글이 추가되었으므로)
@@ -319,8 +294,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
             delete commentCache.value[key]
           }
         })
-
-        console.log('✅ 댓글 작성 성공!', result.comment)
         return result
       }
       else {
@@ -338,21 +311,8 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
   }
 
   /**
-   * 기존 함수들 (호환성 유지)
+   * 초기화
    */
-  async function addComment(targetId: string, text: string, isReply = false) {
-    return await postComment(targetId, text)
-  }
-
-  async function rateVideo(videoId: string, rating: 'like' | 'dislike' | 'none' = 'like') {
-    return await likeVideo(videoId, rating)
-  }
-
-  function getVideos(type: 'channel' | 'playlist', id: string): YoutubeVideoItem[] {
-    const cacheKey = `${type}:${id}`
-    return videoCache.value[cacheKey] || []
-  }
-
   function reset() {
     videoCache.value = {}
     commentCache.value = {}
@@ -380,11 +340,6 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
     fetchComments,
     likeVideo,
     postComment,
-
-    // 기존 메소드 (호환성)
-    addComment,
-    rateVideo,
-    getVideos,
     reset,
   }
 })
