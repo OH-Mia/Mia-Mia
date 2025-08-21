@@ -90,6 +90,10 @@ onMounted(() => {
   transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+.dark .header-container {
+  background: rgba(102, 102, 102, 0.1);
+}
+
 /* 투명 배경 클래스 */
 .header-container.transparent {
   background: transparent;

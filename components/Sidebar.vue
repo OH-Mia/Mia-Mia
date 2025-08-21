@@ -372,7 +372,7 @@ nav {
 
 <style>
 html.dark .sidebar {
-  background: rgb(80, 73, 83) !important;
+  background: #181a1b !important;
   color: #f9fafb !important;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
 }
@@ -387,7 +387,7 @@ html.dark .menu-item.active {
 }
 
 html.dark .icon-button:hover {
-  background-color: rgb(69, 55, 81) !important;
+  background-color: #333 !important;
 }
 
 html.dark .close-button,

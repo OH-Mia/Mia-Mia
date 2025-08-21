@@ -20,7 +20,7 @@ body {
 }
 
 html.dark body {
-  background: rgb(80, 73, 83) !important;
+  background: #181a1b !important;
   color: #f9fafb !important;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
 }
@@ -56,7 +56,7 @@ html.dark [class*="i-"] {
   상세 페이지 다크모드 스타일
  */
 html.dark .video-page {
-  background: rgb(32, 25, 35);
+  background: #181a1b;
   color: #f9fafb;
 }
 
@@ -65,12 +65,12 @@ html.dark .back-button {
 }
 
 html.dark .back-button:hover {
-  background: rgb(69, 55, 81) !important;
+  background: #333 !important;
   color: #f9fafb !important;
 }
 
 html.dark .video-info {
-  background: rgb(80, 73, 83) !important;
+  background: #181a1b !important;
   color: #f9fafb !important;
 }
 
@@ -88,7 +88,7 @@ html.dark .video-description {
 }
 
 html.dark .comments-section {
-  background: rgb(80, 73, 83) !important;
+  background: #181a1b !important;
   color: #f9fafb !important;
 }
 
@@ -101,7 +101,7 @@ html.dark .comments-title {
 }
 
 html.dark .comments-count {
-  background: rgb(69, 55, 81) !important;
+  background: #333 !important;
   color: #d1d5db !important;
 }
 
@@ -154,7 +154,7 @@ html.dark .el-empty {
 }
 
 html.dark .error-container {
-  background: rgb(32, 25, 35);
+  background: #181a1b;
 }
 
 html.dark .el-result {
@@ -163,17 +163,17 @@ html.dark .el-result {
 }
 
 html.dark .el-skeleton__item {
-  background: linear-gradient(90deg, rgb(69, 55, 81) 25%, rgb(85, 75, 90) 37%, rgb(69, 55, 81) 63%) !important;
+  background: linear-gradient(90deg, #333 25%, rgb(85, 75, 90) 37%, #333 63%) !important;
 }
 
 html.dark .el-skeleton {
-  --el-skeleton-color: rgb(69, 55, 81) !important;
+  --el-skeleton-color: #333 !important;
   --el-skeleton-to-color: rgb(85, 75, 90) !important;
 }
 
 /* 하트 버튼 - 다크 모드 */
 html.dark .heart-button {
-  background: rgb(69, 55, 81) !important;
+  background: #333 !important;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 

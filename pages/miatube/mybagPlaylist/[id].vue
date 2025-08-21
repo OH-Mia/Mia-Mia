@@ -689,7 +689,7 @@ onMounted(async () => {
 }
 
 .dark .comment-form {
-  background: #403b42;
+  background: #333;
   color: #f1f3f5;
   border: 1px solid #555;
 }
