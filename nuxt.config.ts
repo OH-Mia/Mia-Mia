@@ -118,6 +118,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     youtubeApiKey: env.YOUTUBE_API_KEY,
     public: {
+      blogApiUrl: env.NUXT_PUBLIC_BLOG_API_URL,
       googleClientId: env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
       googleRedirectUri: env.NUXT_PUBLIC_GOOGLE_REDIRECT_URI,
       youtubeApiUrl: env.NUXT_PUBLIC_YOUTUBE_API_URL, // vercel url
