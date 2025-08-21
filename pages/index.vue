@@ -6,6 +6,8 @@ definePageMeta({
 })
 
 const youtubeStore = useYoutubeVideoStore()
+const isProcessingOAuth = ref(false)
+const oauthStatus = ref('')
 
 onMounted(async () => {
   if (typeof window !== 'undefined') {
@@ -13,13 +15,27 @@ onMounted(async () => {
     const authCode = urlParams.get('code')
 
     if (authCode) {
-      console.log('루트에서 OAuth 콜백 처리:', authCode)
+      isProcessingOAuth.value = true
+      oauthStatus.value = '인증 처리 중...'
 
       try {
-        await youtubeStore.handleOAuthCallback(authCode)
+        const success = await youtubeStore.handleOAuthCallback(authCode)
+        if (success) {
+          oauthStatus.value = '인증 완료! 이동 중...'
+
+          // 잠시 대기 후 원래 페이지로 이동
+          setTimeout(() => {
+            const returnUrl = sessionStorage.getItem('oauth_return_url') || '/'
+            window.location.href = returnUrl
+          }, 1000)
+        }
+        else {
+          oauthStatus.value = '인증에 실패했습니다.'
+        }
       }
       catch (error) {
         console.error('OAuth 실패:', error)
+        oauthStatus.value = '인증 중 오류가 발생했습니다.'
       }
     }
   }
@@ -27,7 +43,21 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="landing-section">
+  <!-- OAuth 콜백 처리 중일 때 -->
+  <div v-if="isProcessingOAuth" class="oauth-processing">
+    <div class="oauth-content">
+      <div class="loading-spinner" />
+      <h2 class="oauth-title">
+        {{ oauthStatus }}
+      </h2>
+      <p class="oauth-description">
+        {{ "잠시만 기다려주세요..." }}
+      </p>
+    </div>
+  </div>
+
+  <!-- 일반적인 랜딩 페이지 -->
+  <div v-else class="landing-section">
     <div class="landing-image" />
     <div class="landing-content">
       <h1 class="landing-title">
@@ -38,6 +68,68 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+/* OAuth 처리 화면 스타일 */
+.oauth-processing {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  z-index: 9999;
+}
+
+.oauth-content {
+  text-align: center;
+  color: balck;
+  padding: 2rem;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid rgb(197, 197, 197);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 2rem auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.oauth-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-family: 'Playfair Display', serif;
+}
+
+.oauth-description {
+  font-size: 1rem;
+  opacity: 0.8;
+  font-weight: 300;
+}
+
+.dark .oauth-processing {
+  background: #201923;
+}
+
+.dark .oauth-content {
+  color: white;
+}
+
+.dark .loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid #ddd;
+}
+
+/* 기존 랜딩 페이지 스타일 */
 .landing-section {
   position: relative;
   width: 100vw;
@@ -97,11 +189,24 @@ onMounted(async () => {
   .landing-title {
     font-size: 2.5rem;
   }
+
+  .oauth-title {
+    font-size: 1.3rem;
+  }
 }
 
 @media (max-width: 480px) {
   .landing-title {
     font-size: 2rem;
+  }
+
+  .oauth-title {
+    font-size: 1.1rem;
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
   }
 }
 </style>
