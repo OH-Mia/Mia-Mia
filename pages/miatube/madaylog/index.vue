@@ -123,7 +123,7 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  height: 100%;
+  height: calc(100dvh - 70px);
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
