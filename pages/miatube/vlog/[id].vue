@@ -34,6 +34,20 @@ const showLoginModal = ref(false)
 const commentText = ref('')
 const submittingComment = ref(false)
 
+const modalWidth = computed(() => {
+  if (process.client) {
+    const screenWidth = window.innerWidth
+    if (screenWidth < 480)
+      return '90%' // 모바일
+    if (screenWidth < 768)
+      return '80%' // 작은 태블릿
+    if (screenWidth < 1024)
+      return '450px' // 태블릿
+    return '400px' // 데스크탑
+  }
+  return '400px'
+})
+
 // Dicebear 아바타 URL 생성 함수
 function generateDicebearAvatar(seed: string) {
   return `https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b6e3f4,c0aede,d1d4f9&shapeColor=f1f4dc&eyesColor=000000&seed=Felix${encodeURIComponent(seed)}`
@@ -406,7 +420,7 @@ onMounted(async () => {
                 :disabled="!commentText.trim()"
                 @click="commentText = ''"
               >
-                취소
+                {{ "취소" }}
               </el-button>
               <el-button
                 type="primary"
@@ -415,7 +429,7 @@ onMounted(async () => {
                 :disabled="!commentText.trim()"
                 @click="submitComment"
               >
-                댓글 작성
+                {{ "댓글 작성" }}
               </el-button>
             </div>
           </div>
@@ -485,11 +499,11 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- 친화적인 로그인 모달 -->
+    <!-- 로그인 모달 -->
     <el-dialog
       v-model="showLoginModal"
       title=""
-      width="400px"
+      :width="modalWidth"
       :show-close="false"
       align-center
     >
@@ -498,31 +512,26 @@ onMounted(async () => {
           <div class="i-mdi-heart login-heart" />
         </div>
         <h3 class="login-title">
-          좋아요를 누르시겠어요?
+          {{ "좋아요를 누르시겠어요?" }}
         </h3>
         <p class="login-description">
           구글 계정으로 간단하게 로그인하면<br>
           영상에 좋아요를 남길 수 있어요! 💖
         </p>
         <div class="login-actions">
-          <el-button
-            size="large"
-            @click="showLoginModal = false"
-          >
-            다음에 할게요
+          <el-button size="large" @click="showLoginModal = false">
+            {{ "다음에 할게요" }}
           </el-button>
           <el-button
-            type="primary"
-            size="large"
             :loading="youtubeStore.loading"
-            @click="handleEasyLogin"
+            type="primary" size="large" @click="handleEasyLogin"
           >
-            <div class="i-logos-google-icon login-google-icon" />
-            구글로 로그인
+            <img src="/icons/google-icon.svg" alt="Google" class="login-google-icon">
+            {{ "구글로 로그인" }}
           </el-button>
         </div>
         <p class="login-note">
-          * 로그인 정보는 좋아요 기능에만 사용돼요
+          {{ "* 로그인 정보는 좋아요/댓글 작성 기능에만 사용돼요" }}
         </p>
       </div>
     </el-dialog>
@@ -932,6 +941,10 @@ onMounted(async () => {
   margin: 0 0 1rem 0;
 }
 
+.dark .login-title {
+  color: #fff;
+}
+
 .login-description {
   color: #666;
   line-height: 1.6;
@@ -942,6 +955,7 @@ onMounted(async () => {
 .login-actions {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 12px;
   margin-bottom: 1rem;
 }
@@ -951,11 +965,12 @@ onMounted(async () => {
   height: 44px;
   border-radius: 22px;
   font-weight: 500;
+  margin: 0;
 }
 
 .login-google-icon {
   margin-right: 8px;
-  font-size: 16px;
+  width: 18px;
 }
 
 .login-note {
@@ -1039,7 +1054,9 @@ onMounted(async () => {
   }
 
   .comments-header {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     gap: 8px;
   }
 
