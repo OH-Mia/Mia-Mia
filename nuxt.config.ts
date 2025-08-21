@@ -50,6 +50,15 @@ export default defineNuxtConfig({
           },
         }
       : {},
+    devProxy: env.NUXT_PUBLIC_BLOG_API_URL
+      ? {
+          '/api/naver/blog/search': {
+            target: `${env.NUXT_PUBLIC_BLOG_API_URL}`,
+            changeOrigin: true,
+            prependPath: true,
+          },
+        }
+      : {},
     prerender: {
       routes: ['/'], // 사전 렌더링할 경로
     },

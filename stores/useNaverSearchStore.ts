@@ -1,8 +1,12 @@
+import { useRuntimeConfig } from '#app'
 // stores/useNaverSearchStore.ts - 수정된 버전
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useNaverSearchStore = defineStore('naverSearch', () => {
+  const config = useRuntimeConfig()
+  const blogApiUrl = config.public.blogApiUrl
+
   const loading = ref(false)
   const error = ref<string | null>(null)
   const errorCode = ref<string | null>(null)
@@ -23,7 +27,7 @@ export const useNaverSearchStore = defineStore('naverSearch', () => {
     errorCode.value = null
 
     try {
-      const data = await $fetch('https://youtube-api-sooty.vercel.app/api/naver/blog/search', {
+      const data = await $fetch(blogApiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
