@@ -42,9 +42,6 @@ async function onSearch() {
       if (tableData.value.length === 0) {
         ElMessage.info('블로그에서 해당 검색어로 작성된 글을 찾을 수 없습니다.')
       }
-      else {
-        ElMessage.success(`${tableData.value.length}개의 글을 찾았습니다.`)
-      }
     }
   }
   catch (error) {
