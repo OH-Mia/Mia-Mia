@@ -84,7 +84,6 @@ onMounted(async () => {
 
 .oauth-content {
   text-align: center;
-  color: balck;
   padding: 2rem;
 }
 
@@ -105,7 +104,7 @@ onMounted(async () => {
 
 .oauth-title {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 300;
   margin-bottom: 0.5rem;
   font-family: 'Playfair Display', serif;
 }
@@ -114,6 +113,7 @@ onMounted(async () => {
   font-size: 1rem;
   opacity: 0.8;
   font-weight: 300;
+  font-family: 'Playfair Display', serif;
 }
 
 .dark .oauth-processing {
@@ -187,21 +187,21 @@ onMounted(async () => {
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .landing-title {
-    font-size: 2.5rem;
+    font-size: 1.2rem;
   }
 
   .oauth-title {
-    font-size: 1.3rem;
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .landing-title {
-    font-size: 2rem;
+    font-size: 1.2rem;
   }
 
   .oauth-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .loading-spinner {
