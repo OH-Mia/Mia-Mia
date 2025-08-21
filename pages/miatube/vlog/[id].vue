@@ -34,6 +34,7 @@ const showLoginModal = ref(false)
 const commentText = ref('')
 const submittingComment = ref(false)
 
+// computed
 const modalWidth = computed(() => {
   if (process.client) {
     const screenWidth = window.innerWidth
@@ -48,6 +49,14 @@ const modalWidth = computed(() => {
   return '400px'
 })
 
+// 유튜브 임베드 URL 생성
+const embedUrl = computed(() => {
+  if (!videoData.value)
+    return ''
+  return `https://www.youtube.com/embed/${videoData.value.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0`
+})
+
+// events
 // Dicebear 아바타 URL 생성 함수
 function generateDicebearAvatar(seed: string) {
   return `https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b6e3f4,c0aede,d1d4f9&shapeColor=f1f4dc&eyesColor=000000&seed=Felix${encodeURIComponent(seed)}`
@@ -58,7 +67,7 @@ function getAvatarUrl(comment: any) {
   return comment.authorProfileImageUrl || generateDicebearAvatar(comment.author)
 }
 
-// 하트 클릭 핸들러 (ElMessage 제거)
+// 하트 클릭 핸들러
 async function handleHeartClick() {
   // 로그인되지 않은 경우 로그인 모달 표시
   if (!youtubeStore.isAuthenticated) {
@@ -84,10 +93,13 @@ async function handleHeartClick() {
   }
 }
 
-// 간편 로그인 핸들러 (스토어 메소드 호출)
+// 간편 로그인 핸들러
 function handleEasyLogin() {
-  showLoginModal.value = false
+  if (youtubeStore.isAuthenticated) {
+    return
+  }
 
+  showLoginModal.value = false
   try {
     // 현재 위치를 sessionStorage에 저장
     if (typeof window !== 'undefined') {
@@ -102,8 +114,7 @@ function handleEasyLogin() {
   }
 }
 
-// 댓글 작성 핸들러 (ElMessage 제거)
-// 댓글 작성 핸들러 (ElMessage 제거)
+// 댓글 작성 핸들러
 async function submitComment() {
   if (!youtubeStore.isAuthenticated) {
     return
@@ -271,40 +282,10 @@ function goBack() {
   navigateTo('/miatube/vlog')
 }
 
-// 유튜브 임베드 URL 생성
-const embedUrl = computed(() => {
-  if (!videoData.value)
-    return ''
-  return `https://www.youtube.com/embed/${videoData.value.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0`
-})
-
-// OAuth 콜백 처리 (루트에서 처리)
+// onMounted
 onMounted(async () => {
-  if (process.client) {
-    const urlParams = new URLSearchParams(window.location.search)
-    const authCode = urlParams.get('code')
-    const state = urlParams.get('state')
-
-    if (authCode) {
-      console.log('OAuth 콜백 처리 중...', authCode)
-
-      const success = await youtubeStore.handleOAuthCallback(authCode)
-      if (success) {
-        console.log('로그인 성공!')
-
-        // URL 파라미터 제거
-        window.history.replaceState({}, document.title, window.location.pathname)
-
-        // 원래 위치로 이동 (state 또는 sessionStorage 사용)
-        const returnUrl = state ? decodeURIComponent(state) : sessionStorage.getItem('oauth_return_url')
-        if (returnUrl && returnUrl !== window.location.pathname) {
-          await navigateTo(returnUrl)
-          return
-        }
-      }
-    }
-  }
-
+  // 저장된 토큰으로 인증 상태 복원
+  await youtubeStore.restoreAuth()
   fetchVideoData()
 })
 </script>
@@ -521,8 +502,8 @@ onMounted(async () => {
           {{ "좋아요를 누르시겠어요?" }}
         </h3>
         <p class="login-description">
-          구글 계정으로 간단하게 로그인하면<br>
-          영상에 좋아요를 남길 수 있어요! 💖
+          {{ "구글 계정으로 간단하게 로그인하면" }}<br>
+          {{ "영상에 좋아요를 남길 수 있어요! 💖" }}
         </p>
         <div class="login-actions">
           <el-button size="large" @click="showLoginModal = false">
