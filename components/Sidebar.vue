@@ -7,7 +7,7 @@ const emit = defineEmits(['closeSidebar'])
 const router = useRouter()
 
 // ref
-const activeNames = ref('blog')
+const activeNames = ref(['youtube', 'post'])
 const currentMenu = ref('') // 클릭된 서브 메뉴 상태
 const isDark = ref(false)
 
@@ -30,9 +30,8 @@ function selectMenu(name: string) {
     'youtube-vlog': '/miatube/vlog',
     'youtube-madelog': '/miatube/madaylog',
     'youtube-mybag': '/miatube/mybagPlaylist',
-    'admin-files': '/admin/files',
-    'admin-blog': '/admin/blog',
-    'admin-youtube': '/admin/youtube',
+    'journal': '/post/journal',
+    'myday': '/post/myday',
   }
 
   const targetRoute = routeMap[name]
@@ -73,7 +72,7 @@ onMounted(() => {
           <el-collapse-item name="youtube">
             <template #title>
               <div class="flex-center">
-                <div class="i-material-symbols:smart-display-rounded header-icon" />
+                <div class="i-logos:youtube-icon header-icon" />
                 <span>{{ '유튜브' }}</span>
               </div>
             </template>
@@ -84,7 +83,7 @@ onMounted(() => {
               @click="selectMenu('youtube-vlog')"
             >
               <div class="flex-center">
-                <div class="i-material-symbols:photo-camera-rounded menu-icon" />
+                <div class="i-fluent-emoji-flat:film-frames menu-icon" />
                 <span>{{ '브이로그' }}</span>
               </div>
             </div>
@@ -95,7 +94,7 @@ onMounted(() => {
               @click="selectMenu('youtube-madelog')"
             >
               <div class="flex-center">
-                <div class="i-material-symbols:nest-eco-leaf-rounded menu-icon" />
+                <div class="i-fluent-emoji-flat:lemon menu-icon" />
                 <span>{{ '마데로그' }}</span>
               </div>
             </div>
@@ -106,62 +105,41 @@ onMounted(() => {
               @click="selectMenu('youtube-mybag')"
             >
               <div class="flex-center">
-                <div class="i-material-symbols:personal-bag-rounded menu-icon" />
+                <div class="i-fluent-emoji-flat:handbag menu-icon" />
                 <span>{{ '왓츠 인 마이 백' }}</span>
               </div>
             </div>
-
-            <!-- <div
-            class="menu-item"
-            :class="{ active: currentMenu === 'youtube-playlist' }"
-            @click="selectMenu('youtube-playlist')"
-          >
-            <div class="flex-center">
-              <div class="i-material-symbols:queue-music-rounded menu-icon" />
-              <span>{{ '플레이리스트' }}</span>
-            </div>
-          </div> -->
           </el-collapse-item>
 
-          <!-- <el-collapse-item name="admin">
-          <template #title>
-            <div class="flex-center">
-              <div class="i-material-symbols:settings-rounded header-icon" />
-              <span>{{ '관리자' }}</span>
-            </div>
-          </template>
+          <el-collapse-item name="post">
+            <template #title>
+              <div class="flex-center">
+                <div class="i-fluent-emoji-flat:newspaper header-icon" />
+                <span>{{ '읽을거리들' }}</span>
+              </div>
+            </template>
 
-          <div
-            class="menu-item"
-            :class="{ active: currentMenu === 'admin-files' }"
-            @click="selectMenu('admin-files')"
-          >
-            <div class="flex-center">
-              <div class="i-material-symbols:folder-rounded menu-icon" />
-              <span>{{ '파일 관리' }}</span>
+            <div
+              class="menu-item"
+              :class="{ active: currentMenu === 'journal' }"
+              @click="selectMenu('journal')"
+            >
+              <!-- <div class="flex-center">
+                <div class="i-fluent-emoji-flat:heart-hands-medium-light menu-icon" />
+                <span>{{ '주간지' }}</span>
+              </div> -->
             </div>
-          </div>
-          <div
-            class="menu-item"
-            :class="{ active: currentMenu === 'admin-blog' }"
-            @click="selectMenu('admin-blog')"
-          >
-            <div class="flex-center">
-              <div class="i-material-symbols:build-rounded menu-icon" />
-              <span>{{ '블로그 관리' }}</span>
+            <div
+              class="menu-item"
+              :class="{ active: currentMenu === 'myday' }"
+              @click="selectMenu('myday')"
+            >
+              <div class="flex-center">
+                <div class="i-fluent-emoji-flat:four-leaf-clover menu-icon" />
+                <span>{{ 'myday' }}</span>
+              </div>
             </div>
-          </div>
-          <div
-            class="menu-item"
-            :class="{ active: currentMenu === 'admin-youtube' }"
-            @click="selectMenu('admin-youtube')"
-          >
-            <div class="flex-center">
-              <div class="i-mdi:monitor menu-icon" />
-              <span>{{ '유튜브 관리' }}</span>
-            </div>
-          </div>
-        </el-collapse-item> -->
+          </el-collapse-item>
         </el-collapse>
       </nav>
       <div class="icon-button-group">
