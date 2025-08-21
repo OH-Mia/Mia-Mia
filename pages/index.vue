@@ -16,14 +16,7 @@ onMounted(async () => {
       console.log('루트에서 OAuth 콜백 처리:', authCode)
 
       try {
-        const success = await youtubeStore.handleOAuthCallback(authCode)
-        if (success) {
-          console.log('OAuth 성공! 원래 페이지로 이동...')
-
-          // 원래 페이지로 이동
-          const returnUrl = sessionStorage.getItem('oauth_return_url') || '/'
-          window.location.href = returnUrl
-        }
+        await youtubeStore.handleOAuthCallback(authCode)
       }
       catch (error) {
         console.error('OAuth 실패:', error)

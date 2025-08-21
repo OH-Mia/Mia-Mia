@@ -103,6 +103,7 @@ function handleEasyLogin() {
 }
 
 // 댓글 작성 핸들러 (ElMessage 제거)
+// 댓글 작성 핸들러 (ElMessage 제거)
 async function submitComment() {
   if (!youtubeStore.isAuthenticated) {
     return
@@ -116,16 +117,26 @@ async function submitComment() {
     submittingComment.value = true
 
     // YouTube API로 댓글 작성
-    await youtubeStore.postComment(videoId, commentText.value.trim())
+    const newComment = await youtubeStore.postComment(videoId, commentText.value.trim())
+    console.log('🚀 ~ newComment:', newComment)
 
     // 성공시 입력창 초기화
     commentText.value = ''
 
-    // 댓글 목록 새로고침
-    await refreshComments()
+    // 새 댓글을 목록 맨 앞에 추가 (즉시 반영)
+    if (newComment) {
+      comments.value.unshift(newComment.comment)
+      console.log('🚀 ~ comments.value:', comments.value)
+    }
+    else {
+      // API 응답에 댓글 데이터가 없으면 전체 새로고침
+      await refreshComments()
+    }
   }
   catch (err) {
     console.error('댓글 작성 실패:', err)
+    // 실패시에도 새로고침 시도
+    await refreshComments()
   }
   finally {
     submittingComment.value = false
@@ -416,18 +427,13 @@ onMounted(async () => {
             />
             <div class="comment-form-actions">
               <el-button
-                size="small"
-                :disabled="!commentText.trim()"
-                @click="commentText = ''"
+                size="small" :disabled="!commentText.trim()" @click="commentText = ''"
               >
                 {{ "취소" }}
               </el-button>
               <el-button
-                type="primary"
-                size="small"
                 :loading="submittingComment"
-                :disabled="!commentText.trim()"
-                @click="submitComment"
+                type="info" size="small" :disabled="!commentText.trim()" @click="submitComment"
               >
                 {{ "댓글 작성" }}
               </el-button>
@@ -712,7 +718,6 @@ onMounted(async () => {
 .comment-form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
 }
 
 .comments-loading {
@@ -1056,7 +1061,7 @@ onMounted(async () => {
   .comments-header {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items:center;
     gap: 8px;
   }
 

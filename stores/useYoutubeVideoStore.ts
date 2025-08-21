@@ -55,22 +55,15 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
    * OAuth 콜백 처리 (authorization code를 access token으로 교환)
    */
   async function handleOAuthCallback(code: string) {
-    console.log('🚀 ~ code:', code)
-    const isClientSide = typeof window !== 'undefined'
-
-    if (!isClientSide) {
-      return null
-    }
-
     try {
-      const response = await $fetch(oAuthApiUrl, {
+      const response = await $fetch(`${oAuthApiUrl}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: {
           code,
-          redirectUri: oAuthApiUrl,
+          redirectUri: REDIRECT_URI,
           clientId: CLIENT_ID, // ✅ 올바른 환경 변수 참조
         },
       })
@@ -313,7 +306,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
         body: {
           action: 'comment',
           videoId,
-          text: text.trim(),
+          text,
         },
       })
 
