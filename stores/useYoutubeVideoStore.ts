@@ -93,7 +93,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
    * 저장된 토큰으로 인증 상태 복원
    */
   function restoreAuth() {
-    const token = sessionStorage.getItem('youtube_token')
+    const token = sessionStorage.getItem('youtube_access_token')
     if (token) {
       accessToken.value = token
       isAuthenticated.value = true
@@ -106,7 +106,7 @@ export const useYoutubeVideoStore = defineStore('youtubeVideo', () => {
   function logout() {
     accessToken.value = null
     isAuthenticated.value = false
-    sessionStorage.removeItem('youtube_token')
+    sessionStorage.removeItem('youtube_access_token')
   }
 
   /**
