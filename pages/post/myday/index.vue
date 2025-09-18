@@ -20,6 +20,23 @@ const tableData = ref<
 
 const searchStore = useNaverSearchStore()
 
+// 화면 크기에 따른 skeleton 개수 계산
+const skeletonCount = computed(() => {
+  // 기본적으로 화면을 꽉 채울 수 있는 개수 계산
+  // 데스크톱: 3열 기준으로 3-4줄, 태블릿: 2열 기준으로 4-5줄, 모바일: 1열 기준으로 6-8줄
+  if (process.client) {
+    const width = window.innerWidth
+    if (width >= 1200)
+      return 15 // 대형 화면: 5행 x 3열
+    if (width >= 900)
+      return 12 // 중형 화면: 4행 x 3열
+    if (width >= 600)
+      return 10 // 태블릿: 5행 x 2열
+    return 8 // 모바일: 8행 x 1열
+  }
+  return 12 // SSR 기본값
+})
+
 async function onSearch() {
   try {
     await searchStore.searchBlog('마이데이 브이로그', 1, 150)
@@ -68,20 +85,23 @@ onMounted(() => onSearch())
 
 <template>
   <div class="blog-page">
-    <!-- 로딩 상태 -->
+    <!-- 스켈레톤 로딩 -->
     <div v-if="searchStore.loading" class="loading-container">
-      <el-skeleton animated>
-        <template #default>
-          <div class="card-grid">
-            <div v-for="n in 6" :key="n" class="blog-card skeleton-card">
-              <el-skeleton-item variant="h3" class="skeleton-title" />
-              <el-skeleton-item variant="text" class="skeleton-text" />
-              <el-skeleton-item variant="text" class="skeleton-text" />
-              <el-skeleton-item variant="p" class="skeleton-date" />
-            </div>
+      <div class="card-grid">
+        <div v-for="n in skeletonCount" :key="n" class="skeleton-card">
+          <div class="skeleton-header">
+            <div class="skeleton-title" />
           </div>
-        </template>
-      </el-skeleton>
+          <div class="skeleton-content">
+            <div class="skeleton-line" />
+            <div class="skeleton-line" />
+            <div class="skeleton-line short" />
+          </div>
+          <div class="skeleton-footer">
+            <div class="skeleton-date" />
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 블로그 카드 그리드 -->
@@ -139,6 +159,7 @@ onMounted(() => onSearch())
 
 .loading-container {
   width: 100%;
+  min-height: calc(100vh - 4rem); /* 패딩 제외한 전체 높이 */
 }
 
 .card-grid {
@@ -158,6 +179,9 @@ onMounted(() => onSearch())
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border: 1px solid #f1f5f9;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 280px; /* 최소 높이 보장 */
 }
 
 .blog-card:hover {
@@ -246,27 +270,75 @@ onMounted(() => onSearch())
   font-weight: 500;
 }
 
+/* 스켈레톤 로딩 스타일 */
 .skeleton-card {
   padding: 1.5rem;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f5f9;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  animation: skeleton-fade 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes skeleton-fade {
+  0% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.skeleton-header {
+  margin-bottom: 1rem;
 }
 
 .skeleton-title {
   height: 1.5rem;
-  margin-bottom: 1rem;
+  width: 85%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: skeleton-shimmer 2s infinite;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
 }
 
-.skeleton-text {
+.skeleton-content {
+  flex: 1;
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-line {
   height: 1rem;
-  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: skeleton-shimmer 2s infinite;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.skeleton-footer {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
 }
 
 .skeleton-date {
   height: 0.875rem;
-  width: 100px;
-  margin-top: 1rem;
+  width: 120px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: skeleton-shimmer 2s infinite;
+  border-radius: 6px;
 }
 
 .empty-state {
@@ -331,32 +403,46 @@ html.dark .empty-content p {
   color: #d1d5db;
 }
 
-html.dark .results-stats {
-  color: #d1d5db;
-}
-
-html.dark .results-stats strong {
-  color: #f9fafb;
-}
-
 html.dark .skeleton-card {
   background: #1f2937;
   border-color: #374151;
 }
 
+html.dark .skeleton-footer {
+  border-color: #374151;
+}
+
+html.dark .skeleton-title,
+html.dark .skeleton-line,
+html.dark .skeleton-date {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200px 100%;
+}
+
 /* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .blog-page {
     padding: 1.5rem;
   }
 
+  .loading-container {
+    min-height: calc(100vh - 3rem);
+  }
+
   .card-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
   }
 
   .blog-card {
     padding: 1.25rem;
+    min-height: 260px;
   }
 
   .card-title {
@@ -372,11 +458,21 @@ html.dark .skeleton-card {
 
 @media (max-width: 480px) {
   .blog-page {
-    padding: 1.5rem;
+    padding: 1rem;
+  }
+
+  .loading-container {
+    min-height: calc(100vh - 2rem);
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .blog-card {
     padding: 1rem;
+    min-height: 240px;
   }
 
   .card-footer {
@@ -385,8 +481,9 @@ html.dark .skeleton-card {
     gap: 0.75rem;
   }
 
-  .read-more {
-    align-self: flex-end;
+  .skeleton-card {
+    padding: 1rem;
+    min-height: 240px;
   }
 }
 </style>
