@@ -55,6 +55,11 @@ async function onSearch() {
         postdate: v.postdate || '',
         bloggername: v.bloggername || 'mia4956',
       }))
+        .sort((a, b) => {
+          const dateA = new Date(a.postdate || 0)
+          const dateB = new Date(b.postdate || 0)
+          return dateB - dateA // 최신순 (내림차순)
+        })
 
       if (tableData.value.length === 0) {
         ElMessage.info('블로그에서 해당 검색어로 작성된 글을 찾을 수 없습니다.')
@@ -154,7 +159,7 @@ onMounted(() => onSearch())
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  min-height: 100vh;
+  height: calc(100dvh - 70px);
 }
 
 .loading-container {
