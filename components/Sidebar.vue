@@ -30,7 +30,7 @@ function selectMenu(name: string) {
     'youtube-vlog': '/miatube/vlog',
     'youtube-madelog': '/miatube/madaylog',
     'youtube-mybag': '/miatube/mybagPlaylist',
-    'journal': '/post/journal',
+    'miaWeekly': '/post/miaWeekly',
     'myday': '/post/myday',
   }
 
@@ -121,13 +121,13 @@ onMounted(() => {
 
             <div
               class="menu-item"
-              :class="{ active: currentMenu === 'journal' }"
-              @click="selectMenu('journal')"
+              :class="{ active: currentMenu === 'miaWeekly' }"
+              @click="selectMenu('miaWeekly')"
             >
-              <!-- <div class="flex-center">
+              <div class="flex-center">
                 <div class="i-fluent-emoji-flat:heart-hands-medium-light menu-icon" />
                 <span>{{ '주간지' }}</span>
-              </div> -->
+              </div>
             </div>
             <div
               class="menu-item"
