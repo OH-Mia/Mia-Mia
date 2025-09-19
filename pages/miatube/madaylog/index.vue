@@ -123,7 +123,7 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  height: calc(100dvh - 70px);
+  min-height: calc(100dvh - 70px);
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
@@ -163,12 +163,22 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
+  .page-container {
+    padding: 1.5rem 1rem;
+    padding-top: 1rem;
+  }
+
   .card-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
+  .page-container {
+    padding: 0.75rem 1rem;
+    padding-top: 0.5rem;
+  }
+
   .card-grid {
     grid-template-columns: repeat(1, 1fr);
   }

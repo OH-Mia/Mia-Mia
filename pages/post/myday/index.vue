@@ -159,7 +159,7 @@ onMounted(() => onSearch())
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  height: calc(100dvh - 70px);
+  min-height: calc(100dvh - 70px);
 }
 
 .loading-container {
@@ -433,11 +433,12 @@ html.dark .skeleton-date {
 
 @media (max-width: 768px) {
   .blog-page {
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
+    padding-top: 1rem;
   }
 
   .loading-container {
-    min-height: calc(100vh - 3rem);
+    min-height: calc(100vh - 2rem);
   }
 
   .card-grid {
@@ -463,11 +464,12 @@ html.dark .skeleton-date {
 
 @media (max-width: 480px) {
   .blog-page {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
+    padding-top: 0.5rem;
   }
 
   .loading-container {
-    min-height: calc(100vh - 2rem);
+    min-height: calc(100vh - 1.25rem);
   }
 
   .card-grid {
