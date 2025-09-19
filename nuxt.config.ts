@@ -98,17 +98,17 @@ export default defineNuxtConfig({
         {
           rel: 'icon',
           type: 'image/png',
-          href: '/favicon.png',
+          href: 'favicon.png',
         },
         {
           rel: 'apple-touch-icon',
-          href: '/favicon.png',
+          href: 'favicon.png',
           sizes: '180x180',
         },
-        { rel: 'icon', type: 'image/png', href: '/favicon.png', sizes: '32x32' },
-        { rel: 'icon', type: 'image/png', href: '/favicon.png', sizes: '16x16' },
-        { rel: 'apple-touch-icon', href: '/favicon.png.png' },
-        { rel: 'manifest', href: '/site.webmanifest' }, // 선택 사항
+        { rel: 'icon', type: 'image/png', href: 'favicon.png', sizes: '32x32' },
+        { rel: 'icon', type: 'image/png', href: 'favicon.png', sizes: '16x16' },
+        { rel: 'apple-touch-icon', href: 'favicon.png' },
+        { rel: 'manifest', href: 'site.webmanifest' }, // 선택 사항
       ],
       meta: [
         { name: 'theme-color', content: '#ffffff' },
