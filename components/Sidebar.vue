@@ -66,7 +66,7 @@ onMounted(() => {
       </div>
       <nav>
         <el-collapse v-model="activeNames">
-          <el-collapse-item name="aboutMe" class="no-expand">
+          <!-- <el-collapse-item name="aboutMe" class="no-expand">
             <template #title>
               <div class="flex-center" @click.stop="selectMenu('aboutMe')">
                 <div class="i-fluent-emoji-flat:alien header-icon" />
@@ -74,7 +74,7 @@ onMounted(() => {
               </div>
             </template>
             <div />
-          </el-collapse-item>
+          </el-collapse-item> -->
 
           <el-collapse-item name="youtube">
             <template #title>
@@ -148,7 +148,7 @@ onMounted(() => {
             </div>
           </el-collapse-item>
 
-          <el-collapse-item name="contact" class="no-expand">
+          <!-- <el-collapse-item name="contact" class="no-expand">
             <template #title>
               <div class="flex-center" @click.stop="selectMenu('contact')">
                 <div class="i-fluent-emoji-flat:satellite-antenna header-icon" />
@@ -156,7 +156,7 @@ onMounted(() => {
               </div>
             </template>
             <div />
-          </el-collapse-item>
+          </el-collapse-item> -->
         </el-collapse>
       </nav>
       <div class="icon-button-group">
