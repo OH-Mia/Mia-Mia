@@ -6,17 +6,14 @@ import { useRouter } from 'vue-router'
 const emit = defineEmits(['closeSidebar'])
 const router = useRouter()
 
-// ref
+// refs
 const activeNames = ref(['youtube', 'post'])
 const currentMenu = ref('') // 클릭된 서브 메뉴 상태
-const isDark = ref(false)
+
+// dark mode composable
+const { isDark, toggleDarkMode, initializeDarkMode } = useDarkMode()
 
 // events
-function toggleDarkMode() {
-  isDark.value = !isDark.value
-  localStorage.setItem('dark-mode', String(isDark.value))
-  document.documentElement.classList.toggle('dark', isDark.value)
-}
 
 function onCloseSidebar() {
   emit('closeSidebar')
@@ -27,11 +24,13 @@ function selectMenu(name: string) {
 
   // 메뉴에 따라 라우팅
   const routeMap: Record<string, string> = {
+    'aboutMe': '/aboutMe',
     'youtube-vlog': '/miatube/vlog',
     'youtube-madelog': '/miatube/madaylog',
     'youtube-mybag': '/miatube/mybagPlaylist',
     'miaWeekly': '/post/miaWeekly',
     'myday': '/post/myday',
+    'contact': '/contact',
   }
 
   const targetRoute = routeMap[name]
@@ -52,9 +51,7 @@ function goToYoutube() {
 
 // onMounted
 onMounted(() => {
-  const saved = localStorage.getItem('dark-mode') === 'true'
-  isDark.value = saved
-  document.documentElement.classList.toggle('dark', saved)
+  initializeDarkMode()
 })
 </script>
 
@@ -69,6 +66,16 @@ onMounted(() => {
       </div>
       <nav>
         <el-collapse v-model="activeNames">
+          <el-collapse-item name="aboutMe" class="no-expand">
+            <template #title>
+              <div class="flex-center" @click.stop="selectMenu('aboutMe')">
+                <div class="i-fluent-emoji-flat:alien header-icon" />
+                <span>{{ 'About me' }}</span>
+              </div>
+            </template>
+            <div />
+          </el-collapse-item>
+
           <el-collapse-item name="youtube">
             <template #title>
               <div class="flex-center">
@@ -140,17 +147,27 @@ onMounted(() => {
               </div>
             </div>
           </el-collapse-item>
+
+          <el-collapse-item name="contact" class="no-expand">
+            <template #title>
+              <div class="flex-center" @click.stop="selectMenu('contact')">
+                <div class="i-fluent-emoji-flat:satellite-antenna header-icon" />
+                <span>{{ 'Contact' }}</span>
+              </div>
+            </template>
+            <div />
+          </el-collapse-item>
         </el-collapse>
       </nav>
       <div class="icon-button-group">
         <button class="icon-button" aria-label="모드 전환" @click="toggleDarkMode">
-          <div class="icon" :class="[isDark ? 'i-material-symbols:light-mode-rounded icon' : 'i-material-symbols:dark-mode-rounded icon']" />
+          <div class="icon" :class="[isDark ? 'i-fluent-emoji-flat:sun icon' : 'i-fluent-emoji-flat:waxing-crescent-moon icon']" />
         </button>
         <button class="icon-button" aria-label="네이버 블로그" @click="goToNaverBlog">
-          <div class="i-mdi-post icon" />
+          <img src="/icons/blog.svg" alt="네이버 블로그" class="blogIcon">
         </button>
         <button class="icon-button" aria-label="유튜브" @click="goToYoutube">
-          <div class="i-mdi-youtube icon" />
+          <div class="i-logos:youtube-icon icon" />
         </button>
       </div>
     </aside>
@@ -231,6 +248,12 @@ html.dark .overlay {
   width: 20px;
   height: 20px;
 }
+.blogIcon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  margin-bottom: 2px;
+}
 .header-icon,
 .menu-icon {
   margin-right: 8px;
@@ -297,6 +320,21 @@ nav {
 .icon-button:hover {
   border-radius: 500px;
   background-color: #f2f2f2;
+}
+
+/* 화살표 숨기기 */
+::v-deep(.el-collapse-item.no-expand .el-collapse-item__arrow) {
+  display: none !important;
+}
+
+/* 클릭 시 확장 방지 */
+::v-deep(.el-collapse-item.no-expand .el-collapse-item__header) {
+  cursor: pointer;
+}
+
+/* 빈 컨텐츠 영역 숨기기 */
+::v-deep(.el-collapse-item.no-expand .el-collapse-item__wrap) {
+  display: none !important;
 }
 
 /* 모바일에서 위에서 아래로 나타나도록 수정 */

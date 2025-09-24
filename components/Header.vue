@@ -3,8 +3,8 @@
 const emit = defineEmits(['openSidebar'])
 const route = useRoute()
 
-// ref
-const isDark = ref(false)
+// dark mode composable
+const { isDark, toggleDarkMode, initializeDarkMode } = useDarkMode()
 
 // 투명 배경을 적용할 페이지들
 const transparentPages = ['/'] // 원하는 페이지 경로들
@@ -15,11 +15,6 @@ const isTransparentPage = computed(() => {
 })
 
 // events
-function toggleDarkMode() {
-  isDark.value = !isDark.value
-  localStorage.setItem('dark-mode', String(isDark.value))
-  document.documentElement.classList.toggle('dark', isDark.value)
-}
 
 function onpenSidebar() {
   emit('openSidebar')
@@ -39,9 +34,10 @@ function goToYoutube() {
 
 // onMounted
 onMounted(() => {
-  const saved = localStorage.getItem('dark-mode') === 'true'
-  isDark.value = saved
-  document.documentElement.classList.toggle('dark', saved)
+  initializeDarkMode()
+})
+watch(() => {
+
 })
 </script>
 
@@ -58,13 +54,13 @@ onMounted(() => {
 
     <div class="header-links desktop-links">
       <button class="icon-button" aria-label="모드 전환" @click="toggleDarkMode">
-        <div class="icon" :class="[isDark ? 'i-material-symbols:light-mode-rounded icon' : 'i-material-symbols:dark-mode-rounded icon']" />
+        <div class="icon" :class="[isDark ? 'i-fluent-emoji-flat:sun icon' : 'i-fluent-emoji-flat:waxing-crescent-moon icon']" />
       </button>
       <button class="icon-button" aria-label="네이버 블로그" @click="goToNaverBlog">
-        <div class="i-mdi-post icon" />
+        <img src="/icons/blog.svg" alt="네이버 블로그" class="blogIcon">
       </button>
       <button class="icon-button" aria-label="유튜브" @click="goToYoutube">
-        <div class="i-mdi-youtube icon" />
+        <div class="i-logos:youtube-icon icon" />
       </button>
     </div>
 
@@ -136,7 +132,12 @@ onMounted(() => {
   width: 20px;
   height: 20px;
 }
-
+.blogIcon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  margin-bottom: 2px;
+}
 .header-links {
   display: flex;
   gap: 12px;
